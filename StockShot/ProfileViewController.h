@@ -24,6 +24,7 @@
     IBOutlet UIView *contentView;
 }
 - (id)initWithUser:(User*)user;
+- (IBAction)touchFollow:(id)sender;
 - (IBAction)touchFollower:(id)sender;
 - (IBAction)touchFollowing:(id)sender;
 - (IBAction)touchChat:(id)sender;

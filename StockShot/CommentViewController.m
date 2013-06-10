@@ -37,7 +37,7 @@ static NSString *CellClassName = @"MessageCell";
     if (self) {
         self.hidesBottomBarWhenPushed = YES;
         self.photoDict = dict;
-//        comments = [dict objectForKey:@"comment"];
+        comments = [dict objectForKey:@"comment"];
     }
     return self;
 }

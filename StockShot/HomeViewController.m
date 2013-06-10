@@ -277,7 +277,7 @@ static NSString *CellClassName = @"ImageViewCell";
                                                  newUser.name = [player objectForKey:@"name"];
                                                  newUser.username = [player objectForKey:@"username"];                                                 
                                              }
-                                             NSLog(@"ResultImage[0]: %@",[resultImages objectAtIndex:0]);
+//                                             NSLog(@"ResultImage[0]: %@",[resultImages objectAtIndex:0]);
                                              [contentTableView reloadData];
                                              [appdelegate saveContext];
                                              

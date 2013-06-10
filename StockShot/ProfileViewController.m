@@ -20,7 +20,7 @@
     AppDelegate *appdelegate;
     NSMutableArray *userPhotos;
     __gm_weak GMGridView *_gmGridView;
-
+    User *me;
 }
 @end
 
@@ -48,7 +48,13 @@
 {
     [super viewDidLoad];
     appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    self.navigationItem.leftBarButtonItem = [Utility menuBarButtonWithID:self];
+    
+    if (self.navigationController.viewControllers.count > 1){
+        self.navigationItem.leftBarButtonItem = [Utility backButton:self];
+    }
+    else{
+        self.navigationItem.leftBarButtonItem = [Utility menuBarButtonWithID:self];
+    }
 
     self.title = @"Profile";
     
@@ -119,6 +125,10 @@
     [self.navigationController pushViewController:editProfile animated:YES];
 }
 
+- (IBAction)touchFollow:(id)sender
+{
+    [self followPlayerID:self.user.facebookID];
+}
 - (IBAction)touchFollower:(id)sender
 {
     
@@ -285,6 +295,37 @@
                                          }];
     [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
     [operation start];
+}
+
+- (void)followPlayerID:(NSString*)targetID
+{
+    me = [User me];
+    if (me) {
+        NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/follow"];
+        NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&target_id=%@",me.facebookID,targetID];
+        
+//        NSLog(@"URL: %@",[url absoluteString]);
+//        NSLog(@"params: %@",params);
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+        [request setHTTPMethod:@"POST"];
+        [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
+        [request setTimeoutInterval:20];
+        
+        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
+                                             {
+                                                 NSLog(@"Result: %@",JSON);
+                                                 [Utility alertWithMessage:[NSString stringWithFormat:@"Follow: %@",[JSON objectForKey:@"result"]]];
+                                                 
+                                             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+                                             {
+                                                 [Utility alertWithMessage:[NSString stringWithFormat:@"ERROR: %@",url]];
+                                                 [self dismissViewControllerAnimated:YES completion:nil];
+                                             }];
+        [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
+        
+        [operation start];
+        
+    }
 }
 
 - (void)didReceiveMemoryWarning

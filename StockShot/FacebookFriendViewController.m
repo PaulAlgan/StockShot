@@ -42,7 +42,7 @@
     appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     [self getFriendList];
     
-    me = [User meInManagedObjectContext:appdelegate.managedObjectContext];
+    me = [User me];
 }
 
 #pragma mark - Table view data source

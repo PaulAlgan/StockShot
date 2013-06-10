@@ -11,6 +11,10 @@
 #import "AppDelegate.h"
 #import "User+addition.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+
+static NSString *CellClassName = @"NewsCell";
+
+
 @interface FeedViewController ()
 {
     AppDelegate *appdelegate;
@@ -37,6 +41,8 @@
     [super viewDidLoad];
     self.navigationItem.title = @"News";
     appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    cellLoader = [UINib nibWithNibName:CellClassName bundle:[NSBundle mainBundle]];
+
     me = [User me];
     feedTypeNews = YES;
     
@@ -84,8 +90,23 @@
 }
 #pragma mark - Table view data source
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 50;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NewsCell *cell = [[NewsCell alloc] init];
+    if (newsList.count > 0)
+    {
+        NSDictionary *newsFeed = [newsList objectAtIndex:indexPath.row];
+        int rowHeight = [cell getRowHeightWithNewsFeed:newsFeed];
+        if (rowHeight < 46){
+            return 46;
+        }
+        else{
+            return rowHeight + 8;
+        }
+    }
+    else{
+        return 46;
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -98,67 +119,18 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *CellIden = @"CellIden";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIden];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIden];
+    
+    NewsCell *cell = (NewsCell *)[tableView dequeueReusableCellWithIdentifier:CellClassName];
+    if (!cell){
+        NSArray *topLevelItems = [cellLoader instantiateWithOwner:self options:nil];
+        cell = [topLevelItems objectAtIndex:0];
     }
     
     if (newsList.count > 0)
     {
-        NSDictionary *dict = [newsList objectAtIndex:indexPath.row];
-        NSDictionary *player = [dict objectForKey:@"action_player"];
-        NSDictionary *comment = nil;
-        NSDictionary *photo = nil;
-        if ([dict objectForKey:@"comment"]){
-            comment = [dict objectForKey:@"comment"];
-        }
-        if ([dict objectForKey:@"photo"]){
-            photo = [dict objectForKey:@"photo"];
-        }
-        
-        NSString *contentString = [[NSString alloc] init];
-        
-        if ([[dict objectForKey:@"kind"] isEqualToString:@"comment"])
-        {
-            if (photo)
-            {
-                if ([photo objectForKey:@"message"])
-                {
-                    contentString = [NSString stringWithFormat:@"%@ left a comment on your photo: %@"
-                                     ,[player objectForKey:@"name"]
-                                     ,[photo objectForKey:@"message"]];
-                }
-                else
-                {
-                    contentString = [NSString stringWithFormat:@"%@ left a comment on your photo",[player objectForKey:@"name"]];
-                }
-            }
-        }
-        else if ([[dict objectForKey:@"kind"] isEqualToString:@"follow"])
-        {
-            contentString = [NSString stringWithFormat:@"%@ started following you",[player objectForKey:@"name"]];
-        }
-        else if ([[dict objectForKey:@"kind"] isEqualToString:@"like_photo"])
-        {
-            contentString = [NSString stringWithFormat:@"%@ liked your photo",[player objectForKey:@"name"]];
-        }
-        
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        formatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSSSS";
-        [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-        NSString *dateAgoString = [Utility timeAgoWithDate:[formatter dateFromString:[dict objectForKey:@"date"]]];
-        
-        cell.textLabel.text = contentString;
-        cell.detailTextLabel.text = dateAgoString;
-        [cell.imageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture"
-                                                              ,[player objectForKey:@"facebook_id"]]]
-                       placeholderImage:[UIImage imageNamed:@"profileImage.png"]];
-        
-        cell.textLabel.font = [UIFont systemFontOfSize:14];
+        NSDictionary *newsFeed = [newsList objectAtIndex:indexPath.row];
+        [cell setNewsFeed:newsFeed];
     }
-    
-    
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }

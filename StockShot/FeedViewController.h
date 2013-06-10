@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "IIViewDeckController.h"
+#import "NewsCell.h"
 
 @interface FeedViewController : UIViewController
 {
+    UINib *cellLoader;
+
     IBOutlet UITableView *feedTable;
     IBOutlet UIButton *newsButton;
     IBOutlet UIButton *followingButton;
