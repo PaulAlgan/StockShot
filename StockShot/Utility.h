@@ -28,6 +28,7 @@
 + (NSData*)compressToFixSize:(UIImage*)image;
 + (UIImage *)squareImageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
 + (NSString*)timeAgoWithDate:(NSDate *)time;
++ (NSString*)shortTimeAgoWithDate:(NSDate *)time;
 + (UIImage*)scaleImage:(UIImage*)anImage withEditingInfo:(NSDictionary*)editInfo;
 + (UIImage*)imageByCropping:(UIImage *)imageToCrop toRect:(CGRect)rect;
 + (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;

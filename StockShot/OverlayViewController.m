@@ -17,6 +17,7 @@
     AppDelegate *appdelegate;
     UIImage *sourceImage;
     NSString *sourceMessage;
+    NSDictionary *stockDict;
 }
 @end
 
@@ -37,6 +38,7 @@
     if (self) {
         sourceImage = image;
         sourceMessage = message;
+        [self getStockDetail:@"kk"];
     }
     return self;
 }
@@ -61,6 +63,17 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    self.navigationController.navigationBar.hidden = YES;
+    UIImage *buttonBG = [Utility imageWithImage:sourceImage scaledToSize:CGSizeMake(100, 100)];
+    for (int i=200; i<=201; i++)
+    {
+        UIButton *button = (UIButton*)[filterView viewWithTag:i];
+        [button setBackgroundImage:buttonBG forState:UIControlStateNormal];
+    }
+}
 - (IBAction)touchOverlay:(id)sender
 {
     UIButton *button = (UIButton*)sender;
@@ -70,13 +83,38 @@
         [view removeFromSuperview];
     }
     
+    NSDate *date = [NSDate date];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy MMM,dd"];
+    NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
+    [timeFormatter setDateFormat:@"HH:mm:ss"];
+
+    
     if (tag == 0)
     {
         [overlayView addSubview:overlay1];
+        
+        if (stockDict) {
+            pChangeLabel1.text = [NSString stringWithFormat:@"%.2f%%",[[stockDict objectForKey:@"PersentChange"] floatValue]];
+            lastLabel1.text = [NSString stringWithFormat:@"%.2f",[[stockDict objectForKey:@"Last"] floatValue]];
+            openLabel1.text = [NSString stringWithFormat:@"%.2f",[[stockDict objectForKey:@"Open"] floatValue]];
+            lowLabel1.text = [NSString stringWithFormat:@"%.2f",[[stockDict objectForKey:@"Low"] floatValue]];
+            highLabel1.text = [NSString stringWithFormat:@"%.2f",[[stockDict objectForKey:@"High"] floatValue]];
+        }
+        dateLable1.text = [dateFormatter stringFromDate:date];
+        timeLable1.text = [timeFormatter stringFromDate:date];
+        
     }
     else if (tag == 1)
     {
         [overlayView addSubview:overlay2];
+        
+        if (stockDict) {
+            pChangeLabel2.text = [NSString stringWithFormat:@"%.2f%%",[[stockDict objectForKey:@"PersentChange"] floatValue]];
+            lastLabel2.text = [NSString stringWithFormat:@"%.2f",[[stockDict objectForKey:@"Last"] floatValue]];
+        }
+        dateLable2.text = [dateFormatter stringFromDate:date];
+        timeLable2.text = [timeFormatter stringFromDate:date];
     }  
 }
 - (IBAction)touchBack:(id)sender
@@ -171,6 +209,35 @@
     
 }
 
+- (void)getStockDetail:(NSString*)stockName
+{
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://210.1.59.181/stockshot/GetDataStockByName.aspx?symbol=%@",@"kk"]];
+
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"GET"];
+//    [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setTimeoutInterval:20];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
+                                         {
+                                             NSLog(@"JSON: %@",JSON);
+                                             stockDict = [NSDictionary dictionaryWithDictionary:JSON];
+                                         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+                                         {
+                                             //                                                 NSLog(@"ERROR CODE: %d",response.statusCode);
+                                             [loadAlert dismissWithClickedButtonIndex:0 animated:YES];
+                                             [Utility alertWithMessage:[NSString stringWithFormat:@"Upload Photo Error: %d",response.statusCode]];
+                                             [self dismissViewControllerAnimated:YES completion:^{
+                                                 [appdelegate backToLastTabbar];
+                                             }];
+                                         }];
+    
+    [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
+    [operation start];
+    
+}
+
+
+// http://210.1.59.181/stockshot/GetDataStockByName.aspx?symbol=kk
 
 
 - (void)didReceiveMemoryWarning

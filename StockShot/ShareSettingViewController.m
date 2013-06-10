@@ -7,9 +7,12 @@
 //
 
 #import "ShareSettingViewController.h"
-
+#import "User+addition.h"
+#import <FacebookSDK/FacebookSDK.h>
 @interface ShareSettingViewController ()
-
+{
+    User *me;
+}
 @end
 
 @implementation ShareSettingViewController
@@ -18,7 +21,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
         self.title = @"Share Setting";
     }
     return self;
@@ -28,13 +30,34 @@
 {
     [super viewDidLoad];
     self.navigationItem.leftBarButtonItem = [Utility backButton:self];
-    // Do any additional setup after loading the view from its nib.
+    me  = [User me];
+    if (me) {
+        lblFacebookName.text = me.name;
+        lblEmailName.text = me.email;
+    }
+    
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    
+    NSMutableDictionary * params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                    @"id,name,email,first_name,last_name,username,locale",@"fields",
+                                    nil];
+    
+    FBRequest *friendsRequest = [FBRequest requestWithGraphPath:@"me"
+                                                     parameters:params
+                                                     HTTPMethod:@"GET"];
+    
+    [friendsRequest startWithCompletionHandler:^(FBRequestConnection *connection,
+                                                 id result,
+                                                 NSError *error) {
+        lblFacebookName.text = [result objectForKey:@"name"];
+        lblEmailName.text = [result objectForKey:@"email"];
+    }];
+
 }
 
 - (IBAction)btFacebookSetting:(id)sender {

@@ -14,12 +14,26 @@
     IBOutlet UIView *overlayView;
     IBOutlet UIImageView *imageView;
     UIAlertView *loadAlert;
-
+    IBOutlet UIView *filterView;
+    
     // DEMO VIEW
     IBOutlet UIView *overlay1;
     IBOutlet UITextField *textField1;
+    IBOutlet UILabel *pChangeLabel1;
+    IBOutlet UILabel *dateLable1;
+    IBOutlet UILabel *timeLable1;
+    IBOutlet UILabel *lastLabel1;
+    IBOutlet UILabel *lowLabel1;
+    IBOutlet UILabel *highLabel1;
+    IBOutlet UILabel *openLabel1;
+    
     IBOutlet UIView *overlay2;
     IBOutlet UITextField *textField2;
+    IBOutlet UILabel *pChangeLabel2;
+    IBOutlet UILabel *dateLable2;
+    IBOutlet UILabel *timeLable2;
+    IBOutlet UILabel *lastLabel2;
+    
     IBOutlet UIImageView *resultImageView;
     
     IBOutlet UIButton *facebookButton;

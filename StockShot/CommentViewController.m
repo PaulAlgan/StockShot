@@ -15,7 +15,7 @@ static NSString *CellClassName = @"CommentCell";
 
 @interface CommentViewController ()
 {
-    NSArray *comments;
+    NSMutableArray *comments;
     BOOL keyboardShow;
     User *me;
 }
@@ -61,7 +61,6 @@ static NSString *CellClassName = @"CommentCell";
                                                object:nil];
     NSLog(@"Comments: %@",comments);
 }
-
 
 #pragma mark - IBAction
 - (IBAction)sendMessage:(id)sender
@@ -112,13 +111,8 @@ static NSString *CellClassName = @"CommentCell";
     }
     
     if (comments > 0) {
-//        ChatMessage *chatMessage = [fetchedResultsController objectAtIndexPath:indexPath];
         NSDictionary *comment = [comments objectAtIndex:indexPath.row];
         [cell setComment:comment];
-//        cell.userName = chatMessage.from;
-//        cell.time = chatMessage.timeDate;
-//        cell.userID = chatMessage.from;
-        
     }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -190,9 +184,6 @@ static NSString *CellClassName = @"CommentCell";
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    //    NSString *string = textView.text;
-//    NSLog(@"textViewDidChange");
-    
     if ([textView hasText])
     {
         sendButton.enabled = YES;
@@ -200,14 +191,13 @@ static NSString *CellClassName = @"CommentCell";
     else
     {
         sendButton.enabled = NO;
-    }
-    
+    }    
 }
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-    [chatTextView resignFirstResponder];
+//    [chatTextView resignFirstResponder];
 }
 
 #pragma mark - DATA
@@ -225,7 +215,20 @@ static NSString *CellClassName = @"CommentCell";
     [request setTimeoutInterval:7];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
                                          {
-                                             NSLog(@"SEND RESULT: %@",JSON);
+                                             NSDate *todaydate = [NSDate date];
+                                             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                                             formatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSSSS";
+                                             [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+                                             
+                                             
+//                                             NSLog(@"SEND RESULT: %@",JSON);
+//                                             NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
+//                                                                   msg, @"comment",
+//                                                                   [formatter stringFromDate:todaydate] , @"date",
+//                                                                   me.facebookID, @"player",
+//                                                                   nil];
+//                                             [comments addObject:dict];
+                                             [contentTableView reloadData];
                                              [Utility alertWithMessage:[NSString stringWithFormat:@"Comment: %@",[JSON objectForKey:@"result"]]];
                                              
                                          } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)

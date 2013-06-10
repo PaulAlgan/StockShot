@@ -135,22 +135,18 @@
 #pragma mark - Delegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    NSLog(@"SELECT DONE");
     UIImage *image = nil;
     
     if ([picker sourceType] == UIImagePickerControllerSourceTypePhotoLibrary) {
         NSLog(@"UIImagePickerControllerSourceTypePhotoLibrary");
         image = [Utility scaleImage:[info objectForKey:UIImagePickerControllerOriginalImage] withEditingInfo:info];
-//        image = [info objectForKey:UIImagePickerControllerEditedImage];
         [picker dismissViewControllerAnimated:YES completion:^(void)
         {
             UIImage  *resultImage = nil;
-            NSLog(@"ImageSize: %@",NSStringFromCGSize(image.size));
             if (image.size.width != image.size.height){
                 if (image.size.width > image.size.height){
                     resultImage = [Utility imageByCropping:image toRect:CGRectMake(0, (image.size.width-image.size.height)/2.0,
                                                                                    image.size.width, image.size.width)];
-                    
                 }
                 else{
                     resultImage = [Utility imageByCropping:image toRect:CGRectMake((image.size.height-image.size.width)/2.0, 0,
@@ -161,11 +157,10 @@
             {
                 resultImage = image;
             }
-            NSLog(@"ImageResultSize: %@",NSStringFromCGSize(resultImage.size));
             resultImage = [self imageWithImage:resultImage scaledToSize:CGSizeMake(720, 720)];
-            NSLog(@"ImageResultSize: %@",NSStringFromCGSize(resultImage.size));
             EditImageViewController *editImageView = [[EditImageViewController alloc] initWithImage:resultImage];
             [self.navigationController pushViewController:editImageView animated:NO];
+            editImageView = nil;
         }];
     }
     else if ([picker sourceType] == UIImagePickerControllerSourceTypeCamera)
@@ -175,20 +170,16 @@
         
         UIImage *resultImage = nil;
         CGRect cropRect = CGRectMake(0, 0, image.size.width, image.size.width);
-        NSLog(@"WIDTH: %lf",cropRect.size.width);
         CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], cropRect);
         resultImage = [UIImage imageWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation];
         CGImageRelease(imageRef);
-//        image = resultImage;
         resultImage = [self imageWithImage:[resultImage fixOrientation] scaledToSize:CGSizeMake(720, 720)];
-//        NSLog(@"IMG W: %lf",resultImage.size.width);
         
         EditImageViewController *editImageView = [[EditImageViewController alloc]
                                                   initWithImage:resultImage];
         [self.navigationController pushViewController:editImageView animated:YES];
-    }
-    
-//    [NSThread detachNewThreadSelector:@selector(useImage:) toTarget:self withObject:image];
+        editImageView = nil;
+    }    
 }
 
 - (void)useImage:(UIImage*)image
@@ -212,49 +203,6 @@
     UIGraphicsEndImageContext();
     return newImage;
 }
-
-
-//- (void)hideTabBar:(UITabBarController *) tabbarcontroller
-//{
-//    [UIView beginAnimations:nil context:NULL];
-//    [UIView setAnimationDuration:0.0];
-//    
-//    for(UIView *view in tabbarcontroller.view.subviews)
-//    {
-//        if([view isKindOfClass:[UITabBar class]])
-//        {
-//            [view setFrame:CGRectMake(view.frame.origin.x, 480, view.frame.size.width, view.frame.size.height)];
-//        }
-//        else
-//        {
-//            [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, 480)];
-//        }
-//    }
-//    
-//    [UIView commitAnimations];
-//}
-//
-//- (void)showTabBar:(UITabBarController *) tabbarcontroller
-//{
-//    [UIView beginAnimations:nil context:NULL];
-//    [UIView setAnimationDuration:0.0];
-//    for(UIView *view in tabbarcontroller.view.subviews)
-//    {
-//        NSLog(@"%@", view);
-//        
-//        if([view isKindOfClass:[UITabBar class]])
-//        {
-//            [view setFrame:CGRectMake(view.frame.origin.x, 431, view.frame.size.width, view.frame.size.height)];
-//            
-//        }
-//        else
-//        {
-//            [view setFrame:CGRectMake(view.frame.origin.x, view.frame.origin.y, view.frame.size.width, 431)];
-//        }
-//    }
-//    
-//    [UIView commitAnimations];
-//}
 
 - (void)didReceiveMemoryWarning
 {

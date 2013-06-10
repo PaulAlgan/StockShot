@@ -70,7 +70,7 @@ static NSString *CellClassName = @"ImageViewCell";
     [super viewWillAppear:YES];
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     me = [User me];
-    if (me) {
+    if (me.username) {
         [self getTimeline:me.facebookID];
     }
 }
@@ -78,7 +78,7 @@ static NSString *CellClassName = @"ImageViewCell";
 - (void)reloadTimeline
 {
     me = [User me];
-    if (me) {
+    if (me.username) {
         NSLog(@"Reload Timeline: %@",me.facebookID);
         [self getTimeline:me.facebookID];
     }

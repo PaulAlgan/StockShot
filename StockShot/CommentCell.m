@@ -72,7 +72,7 @@
     User *user = [User userWithFacebookID:userID InManagedObjectContext:appdelegate.managedObjectContext];
     NSString *contentString = [[NSString alloc] init];
     
-    if (user) {
+    if (user.username) {
         contentString = [contentString stringByAppendingString:user.username];
     }else{
         contentString = [contentString stringByAppendingString:userID];

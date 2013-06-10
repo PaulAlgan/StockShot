@@ -220,6 +220,66 @@
     return [NSString stringWithFormat:@"%d %@ ago",timeAgo,unit];
 }
 
+
++ (NSString*)shortTimeAgoWithDate:(NSDate *)time
+{
+    NSCalendar *sysCalendar = [NSCalendar currentCalendar];
+    NSDate *dateNow = [NSDate date];
+    int timeAgo;
+    NSString *unit = [[NSString alloc] init];
+    
+    unsigned int unitFlags = NSHourCalendarUnit | NSMinuteCalendarUnit | NSDayCalendarUnit | NSMonthCalendarUnit;
+    
+    NSDateComponents *breakdownInfo = [sysCalendar components:unitFlags fromDate:time  toDate:dateNow  options:0];
+    
+    if ([breakdownInfo month] > 0)
+    {
+        timeAgo = [breakdownInfo month];
+        if (timeAgo>1)
+            unit = @"months";
+        else
+            unit = @"month";
+    }
+    else if([breakdownInfo day] > 0)
+    {
+        timeAgo = [breakdownInfo day];
+        if (timeAgo>1)
+            unit = @"days";
+        else
+            unit = @"day";
+    }
+    else if([breakdownInfo hour] > 0)
+    {
+        timeAgo = [breakdownInfo hour];
+        if (timeAgo>1)
+            unit = @"hours";
+        else
+            unit = @"hour";
+    }
+    else if([breakdownInfo minute] > 0)
+    {
+        timeAgo = [breakdownInfo minute];
+        if (timeAgo>1)
+            unit = @"m";
+        else
+            unit = @"m";
+    }
+    else
+    {
+        timeAgo = [breakdownInfo second];
+        if (timeAgo>1 && timeAgo < 60)
+            unit = @"secs";
+        else
+        {
+            unit = @"sec";
+            timeAgo = 1;
+        }
+        
+    }
+    return [NSString stringWithFormat:@"%d%@",timeAgo,unit];
+}
+
+
 + (UIImage*)scaleImage:(UIImage*)anImage withEditingInfo:(NSDictionary*)editInfo{
     
     UIImage *newImage;

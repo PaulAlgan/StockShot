@@ -116,6 +116,13 @@
 
 - (void)getPlayerWithUser:(User*)user deviceToken:(NSString*)deviceToken
 {
+    NSString *requestType = [[NSString alloc] init];
+    if (self.haveUser){
+        requestType = @"request_info";
+    }
+    else{
+        requestType = @"register";
+    }
     NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/player"];
     NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&name=%@&username=%@&first_name=%@&last_name=%@&email=%@&locale=%@&device_token=%@&request_type=%@"
                         ,user.facebookID
@@ -126,7 +133,7 @@
                         ,user.email
                         ,user.locale
                         ,deviceToken,
-                        @"register"];
+                        requestType];
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
@@ -135,7 +142,7 @@
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
                                          {
                                              NSDictionary *dictionary = [NSDictionary dictionaryWithDictionary:JSON];
-                                             NSLog(@"getPlayerWithUser: %@",dictionary);
+//                                             NSLog(@"getPlayerWithUser: %@",dictionary);
                                              [self dismissViewControllerAnimated:YES completion:nil];
                                              User *user = [User me];
 

@@ -14,6 +14,7 @@
 #import "OptionsViewController.h"
 #import "EditProfileViewController.h"
 #import "AppDelegate.h"
+#import "PhotoViewController.h"
 @interface ProfileViewController ()
 <GMGridViewDataSource, GMGridViewSortingDelegate, GMGridViewTransformationDelegate, GMGridViewActionDelegate>
 {
@@ -80,7 +81,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    NSLog(@"ProfileView: %@",NSStringFromCGRect(self.view.frame));
+//    NSLog(@"ProfileView: %@",NSStringFromCGRect(self.view.frame));
     [self reloadUserData];
     [self getImageListWithUserID:self.user.facebookID];
 }
@@ -88,7 +89,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:YES];
-    NSLog(@"viewDidAppear");
+//    NSLog(@"viewDidAppear");
 }
 
 - (void)setUser:(User *)user
@@ -179,6 +180,9 @@
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
 {
     NSLog(@"Did tap at index %d", position);
+    PhotoViewController *photoViewController = [[PhotoViewController alloc] init];
+    photoViewController.photo = [userPhotos objectAtIndex:position];
+    [self.navigationController pushViewController:photoViewController animated:YES];
 }
 
 - (void)GMGridViewDidTapOnEmptySpace:(GMGridView *)gridView
