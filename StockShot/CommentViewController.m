@@ -59,7 +59,6 @@ static NSString *CellClassName = @"MessageCell";
                                                  name:@"TestNotification"
                                                object:nil];
     
-    NSLog(@"CommentN: %d",comments.count);
 }
 
 
@@ -67,7 +66,7 @@ static NSString *CellClassName = @"MessageCell";
 - (IBAction)sendMessage:(id)sender
 {
     chatTextView.text = @"";
-    [self commentOnPhotoKey:[[self.photoDict objectForKey:@"photo"] objectForKey:@"key"] message:chatTextView.text];
+    [self commentOnPhotoKey:[self.photoDict objectForKey:@"key"] message:chatTextView.text];
 }
 #pragma mark - UITabelViewDatasource
 
@@ -148,11 +147,11 @@ static NSString *CellClassName = @"MessageCell";
     [UIView setAnimationDuration:animationDuration];
     
     CGRect viewFrame = self.view.frame;
-    NSLog(@"viewFrame y: %@", NSStringFromCGRect(viewFrame));
+//    NSLog(@"viewFrame y: %@", NSStringFromCGRect(viewFrame));
     
     CGRect keyboardFrameEndRelative = [self.view convertRect:keyboardEndFrame fromView:nil];
-    NSLog(@"self.view: %@", self.view);
-    NSLog(@"keyboardFrameEndRelative: %@", NSStringFromCGRect(keyboardFrameEndRelative));
+//    NSLog(@"self.view: %@", self.view);
+//    NSLog(@"keyboardFrameEndRelative: %@", NSStringFromCGRect(keyboardFrameEndRelative));
     
     viewFrame.size.height =  keyboardFrameEndRelative.origin.y;// - textInputView.frame.size.height;
     self.view.frame = viewFrame;
@@ -175,7 +174,7 @@ static NSString *CellClassName = @"MessageCell";
 - (void)textViewDidChange:(UITextView *)textView
 {
     //    NSString *string = textView.text;
-    NSLog(@"textViewDidChange");
+//    NSLog(@"textViewDidChange");
     
     if ([textView hasText])
     {
@@ -202,7 +201,7 @@ static NSString *CellClassName = @"MessageCell";
     NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/comment"];
     NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&photo_key=%@&message=%@",me.facebookID,key,msg];
     
-//    NSLog(@"SEND: %@",params);
+    NSLog(@"SEND: %@",params);
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];

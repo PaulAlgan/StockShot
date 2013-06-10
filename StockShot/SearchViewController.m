@@ -13,6 +13,10 @@
 #import <QuartzCore/QuartzCore.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "ImageGridViewController.h"
+#import "User+addition.h"
+#import "AppDelegate.h"
+#import <SDWebImage/UIImageView+WebCache.h>
+#import "ProfileViewController.h"
 static NSString *CellClassName = @"ImageViewCell";
 
 @interface SearchViewController ()
@@ -22,7 +26,8 @@ static NSString *CellClassName = @"ImageViewCell";
     NSArray *hotSearch;
     NSString *searchType;
     __gm_weak GMGridView *_gmGridView;
-
+    User *me;
+    AppDelegate *appdelegate;
 }
 @end
 
@@ -49,7 +54,7 @@ static NSString *CellClassName = @"ImageViewCell";
 {
     [super viewDidLoad];
     self.navigationItem.title = @"Explore";
-
+    appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     searchType = [[NSString alloc] init];
     searchType = @"user";
     [self.searchDisplayController.searchResultsTableView registerNib:cellLoader forHeaderFooterViewReuseIdentifier:CellClassName];
@@ -109,7 +114,7 @@ static NSString *CellClassName = @"ImageViewCell";
     {
         if ([searchType isEqualToString:@"hashtag"])
         {
-            static NSString *CellIdentifier = @"Cell";
+            static NSString *CellIdentifier = @"TagCell";
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
             if (cell == nil) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
@@ -124,13 +129,21 @@ static NSString *CellClassName = @"ImageViewCell";
         }
         else
         {
-            static NSString *CellIdentifier = @"Cell";
+            static NSString *CellIdentifier = @"UserCell";
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
             if (cell == nil) {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
             }
             
-            cell.textLabel.text = @"Hello";
+            if (resultUsers.count > 0)
+            {
+                User *user = [resultUsers objectAtIndex:indexPath.row];
+                cell.textLabel.text = user.username;
+                cell.detailTextLabel.text = user.name;
+                [cell.imageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture",user.facebookID]]
+                               placeholderImage:[UIImage imageNamed:@"profileImage.png"]];
+            }
+            
             
             return cell;
         }
@@ -153,9 +166,18 @@ static NSString *CellClassName = @"ImageViewCell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ImageGridViewController *imageGridView = [[ImageGridViewController alloc]
-                                              initWithHashTagName:[hotSearch objectAtIndex:indexPath.row]];
-    [self.navigationController pushViewController:imageGridView animated:YES];
+    if ([searchType isEqualToString:@"hashtag"])
+    {
+        ImageGridViewController *imageGridView = [[ImageGridViewController alloc]
+                                                  initWithHashTagName:[hotSearch objectAtIndex:indexPath.row]];
+        [self.navigationController pushViewController:imageGridView animated:YES];
+    }
+    else
+    {
+        ProfileViewController *profileVC = [[ProfileViewController alloc] initWithUser:[resultUsers objectAtIndex:indexPath.row]];
+        [self.navigationController pushViewController:profileVC animated:YES];
+    }
+    
 }
 
 #pragma mark -
@@ -175,7 +197,7 @@ static NSString *CellClassName = @"ImageViewCell";
     }
     else
     {
-        
+        [self getPhotoFromHashTag:searchBar.text];
     }
     _gmGridView.hidden = NO;
 //    NSLog(@"%f %f %f %f"
@@ -242,6 +264,66 @@ static NSString *CellClassName = @"ImageViewCell";
     [operation start];
 }
 
+- (void)getPhotoFromHashTag:(NSString*)hashTag
+{
+    me = [User me];
+    NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/search"];
+    NSString *params = [[NSString alloc] initWithFormat:@"hashtag=%@",hashTag];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setTimeoutInterval:7];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
+                                         {
+                                             //                                             NSLog(@"JSON: %@",JSON);
+//                                             resultImages = [JSON objectForKey:@"photo"];
+                                             resultUsers = [JSON objectForKey:@"user"];
+//                                             NSLog(@"Photo: %@",[resultImages objectAtIndex:0]);
+//                                             NSLog(@"User[%d]: %@",resultUsers.count,resultUsers);
+                                             
+                                             NSMutableArray *usersTemp = [[NSMutableArray alloc] init];
+                                             for (int i=0; i<resultUsers.count; i++)
+                                             {
+                                                 NSDictionary *userDict = [resultUsers objectAtIndex:i];
+                                                 if (![[userDict objectForKey:@"facebook_id"] isEqualToString:me.facebookID])
+                                                 {
+                                                     User *user = [User userWithFacebookID:[userDict objectForKey:@"id"] InManagedObjectContext:appdelegate.managedObjectContext];
+                                                     
+                                                     user.username = [userDict objectForKey:@"username"];
+                                                     user.name = [userDict objectForKey:@"name"];
+                                                     user.firstName = [userDict objectForKey:@"first_name"];
+                                                     user.lastName = [userDict objectForKey:@"last_name"];
+                                                     user.facebookID = [userDict objectForKey:@"facebook_id"];
+                                                     user.email = [userDict objectForKey:@"email"];
+                                                     user.deviceToken = [userDict objectForKey:@"device_token"];
+                                                     user.locale = [userDict objectForKey:@"locale"];
+                                                     
+                                                     user.notiComment = [userDict objectForKey:@"notification_comment"];
+                                                     user.notiContact = [userDict objectForKey:@"notification_contact"];
+                                                     user.notiLike = [userDict objectForKey:@"notification_like"];
+                                                     
+                                                     user.followerCount =
+                                                     [NSNumber numberWithLong:[[userDict objectForKey:@"follower_count"] longValue]];
+                                                     user.followingCount =
+                                                     [NSNumber numberWithLong:[[userDict objectForKey:@"following_count"] longValue]];
+                                                     user.photoCount =
+                                                     [NSNumber numberWithLong:[[userDict objectForKey:@"photo_count"] longValue]];
+                                                     user.photoLikeCount =
+                                                     [NSNumber numberWithLong:[[userDict objectForKey:@"photo_like_count"] longValue]];
+                                                     [usersTemp addObject:user];
+                                                 }
+                                             }
+                                             resultUsers = [NSArray arrayWithArray:usersTemp];
+                                             NSLog(@"ResultUser: %@",resultUsers);
+                                             [self.searchDisplayController.searchResultsTableView reloadData];
+                                         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+                                         {
+                                             [Utility alertWithMessage:[NSString stringWithFormat:@"ERROR: %@",url]];
+                                         }];
+    [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
+    [operation start];
+}
 
 
 

@@ -133,12 +133,13 @@
     else profileView.user = user;
     
     profileNavigation = [[UINavigationController alloc] initWithRootViewController:profileView];
+    CGRect naviRect = profileNavigation.view.frame;
+//    naviRect.origin.y = -20;
+    naviRect.size.height = 480-52-20;
+    profileNavigation.view.frame = naviRect;
     [self.tabBarController.view addSubview:profileNavigation.view];
 
-    CGRect naviRect = profileNavigation.view.frame;
-    naviRect.origin.y = -20;
-    naviRect.size.height = 480-52;
-    profileNavigation.view.frame = naviRect;
+    
     NSLog(@"H: %lf",profileNavigation.view.frame.size.height);
 }
 - (BOOL)tabBarController:(UITabBarController *)atabBarController shouldSelectViewController:(UIViewController *)viewController

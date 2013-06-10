@@ -22,10 +22,11 @@
     NSError *error = nil;
     NSArray *matches = [context executeFetchRequest:request error:&error];
     
-    if (!matches || ([matches count] > 1)) {
+    if (!matches || ([matches count] > 1))
+    {
         // handle error
     } else if ([matches count] == 0) {
-        NSLog(@"NEW CONVERSION");
+//        NSLog(@"NEW CONVERSION");
         converstion = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:context];
         converstion.toUserID = userID;
 
@@ -34,7 +35,8 @@
         converstion = [matches lastObject];
         
         if (lastMessage) {
-            if ([lastMessage.timeDate compare:converstion.lastmessage.timeDate] == NSOrderedDescending) {
+            if ([lastMessage.timeDate compare:converstion.lastmessage.timeDate] == NSOrderedDescending ||
+                converstion.lastmessage == nil) {
                 [converstion setLastmessage:lastMessage];
             }
         }

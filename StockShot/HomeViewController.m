@@ -91,7 +91,7 @@ static NSString *CellClassName = @"ImageViewCell";
     UIButton *button = (UIButton*)sender;
     
 //    NSLog(@"TITLE[%d]: %@",button.tag,button.titleLabel.text);
-    NSDictionary *player = [[resultImages objectAtIndex:button.tag-200] objectForKey:@"action_player"];
+    NSDictionary *player = [[resultImages objectAtIndex:button.tag-200] objectForKey:@"player"];
 
     User *user = [User userWithFacebookID:[player objectForKey:@"facebook_id"] InManagedObjectContext:appdelegate.managedObjectContext];
 //    NSLog(@"user: %@",[user debugDescription]);
@@ -190,7 +190,7 @@ static NSString *CellClassName = @"ImageViewCell";
     
     if (resultImages.count > 0)
     {
-        NSDictionary *player = [[resultImages objectAtIndex:section] objectForKey:@"action_player"];
+        NSDictionary *player = [[resultImages objectAtIndex:section] objectForKey:@"player"];
         
         cell.backgroundColor = [UIColor colorWithRed:125.0/255.0 green:136.0/255.0 blue:146.0/255.0 alpha:1.0];
         
@@ -200,15 +200,14 @@ static NSString *CellClassName = @"ImageViewCell";
         [userImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture",[player objectForKey:@"facebook_id"]]]
                        placeholderImage:[UIImage imageNamed:@"profileImage.png"]];
         
-        NSString *dateString = [[resultImages objectAtIndex:section] objectForKey:@"date"];
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        formatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSSSS";
-        [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-        timeLabel.text = [self timeAgoWithDate:[formatter dateFromString:dateString]];
+//        NSString *dateString = [[resultImages objectAtIndex:section] objectForKey:@"date"];
+//        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//        formatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSSSS";
+//        [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+//        timeLabel.text = [self timeAgoWithDate:[formatter dateFromString:dateString]];
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-    // 5 320
     return cell;
 }
     
@@ -225,15 +224,15 @@ static NSString *CellClassName = @"ImageViewCell";
     if (resultImages.count>0) {
         cell.delegate = self;
         cell.backgroundColor = [UIColor greenColor];
-        NSDictionary *photo = [[resultImages objectAtIndex:indexPath.row] objectForKey:@"photo"];
-        NSDictionary *player = [[resultImages objectAtIndex:indexPath.row] objectForKey:@"action_player"];
+        NSDictionary *photo = [resultImages objectAtIndex:indexPath.section];
+        NSDictionary *player = [photo objectForKey:@"player"];
         
         cell.urlStringImage = [NSString stringWithFormat:@"https://stockshot-kk.appspot.com/api/photo?photo_key=%@",[photo objectForKey:@"key"]];
         cell.message = [NSString stringWithFormat:@"%@ %@",
                         [player objectForKey:@"name"],[photo objectForKey:@"message"]];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.photoKey = [photo objectForKey:@"key"];
-        cell.key  = [[resultImages objectAtIndex:indexPath.row] objectForKey:@"key"];
+//        cell.key  = [[resultImages objectAtIndex:indexPath.row] objectForKey:@"key"];
     }
     return cell;
 }
@@ -248,9 +247,11 @@ static NSString *CellClassName = @"ImageViewCell";
 #pragma mark - Data
 - (void)getTimeline:(NSString*)facebookID
 {
-    NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/get_follow_timeline"];
+//    NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/get_follow_timeline"];
+    NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/get_user_timeline"];
     //'request_type': ['owner, 'other''] 
-    NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&request_type=%@",facebookID,@"owner"];
+//    NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@",@"12341234"];
+    NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@",facebookID];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
@@ -269,16 +270,14 @@ static NSString *CellClassName = @"ImageViewCell";
                                              for (int i=0; i<[resultImages count]; i++)
                                              {
                                                  NSDictionary *player = [[resultImages objectAtIndex:i] objectForKey:@"action_player"];
-//                                                 NSLog(@"Player: %@",player);
                                                  User *newUser = [User userWithFacebookID:[player objectForKey:@"facebook_id"]
                                                                          InManagedObjectContext:appdelegate.managedObjectContext];
                                                  newUser.firstName = [player objectForKey:@"first_name"];
                                                  newUser.lastName = [player objectForKey:@"last_name"];
                                                  newUser.name = [player objectForKey:@"name"];
-                                                 newUser.username = [player objectForKey:@"username"];
-                                                 
-                                                 
+                                                 newUser.username = [player objectForKey:@"username"];                                                 
                                              }
+                                             NSLog(@"ResultImage[0]: %@",[resultImages objectAtIndex:0]);
                                              [contentTableView reloadData];
                                              [appdelegate saveContext];
                                              
@@ -290,7 +289,6 @@ static NSString *CellClassName = @"ImageViewCell";
     [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
     
     [operation start];
-    
     
 }
 

@@ -63,8 +63,8 @@
         followButton.hidden = NO;
         
         CGRect contentRect = contentView.frame;
-        contentRect.origin.y = 150+35;
-        contentRect.size.height = 303-35;
+        contentRect.origin.y += 35;
+        contentRect.size.height -= 40;
         contentView.frame = contentRect;
     }
     
@@ -74,6 +74,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    NSLog(@"ProfileView: %@",NSStringFromCGRect(self.view.frame));
     [self reloadUserData];
     [self getImageListWithUserID:self.user.facebookID];
 }

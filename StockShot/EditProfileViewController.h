@@ -11,12 +11,17 @@
 @interface EditProfileViewController : UIViewController
 {
     IBOutlet UIImageView *profileImageView;
-    IBOutlet UILabel *nameLabel;
-    IBOutlet UILabel *userNameLabel;
-    IBOutlet UILabel *statusLabel;
-    IBOutlet UILabel *emailLabel;
+    IBOutlet UITextField *nameLabel;
+    IBOutlet UITextField *userNameLabel;
+    IBOutlet UITextField *statusLabel;
+    IBOutlet UITextField *emailLabel;
+    
+    IBOutlet UIScrollView *mainScrollView;
+    IBOutlet UIView *contentView;
 }
 @property (nonatomic,retain) User *user;
+- (IBAction)touchUpdateDone:(id)sender;
+
 - (id)initWithUser:(User*)user;
 
 @end

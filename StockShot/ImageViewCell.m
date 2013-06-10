@@ -51,7 +51,7 @@
 
 - (IBAction)comment:(id)sender
 {
-    [self.delegate touchCommentInKey:self.key];
+    [self.delegate touchCommentInKey:self.photoKey];
 }
 
 - (void)likePhotoWithID:(NSString*)photoKey

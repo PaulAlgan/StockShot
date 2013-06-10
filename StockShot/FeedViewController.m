@@ -15,7 +15,9 @@
 {
     AppDelegate *appdelegate;
     User *me;
+    BOOL feedTypeNews;
     NSArray *newsList;
+    NSArray *followingNewsList;
 }
 @end
 
@@ -36,6 +38,7 @@
     self.navigationItem.title = @"News";
     appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     me = [User me];
+    feedTypeNews = YES;
     
     self.navigationItem.leftBarButtonItem = [Utility menuBarButtonWithID:self];
     UIButton *refreshButton = [Utility refreshButton];
@@ -47,7 +50,13 @@
 
 - (void)reloadFeed
 {
-    [self getNewsTimeline:me.facebookID];
+    if (feedTypeNews) {
+        [self getNewsTimeline:me.facebookID];
+    }
+    else
+    {
+        [self getFollowingNewsTimeline:me.facebookID];
+    }
 }
 
 - (IBAction)selectFeedType:(id)sender
@@ -56,6 +65,7 @@
     
     if (button == newsButton)
     {
+        feedTypeNews = YES;
         newsButton.selected = YES;
         followingButton.selected = NO;
         newsButton.backgroundColor = [UIColor colorWithRed:27.0/255.0 green:86.0/255.0 blue:149.0/255.0 alpha:1];
@@ -63,12 +73,14 @@
     }
     else
     {
+        feedTypeNews = NO;
         newsButton.selected = NO;
         followingButton.selected = YES;
         newsButton.backgroundColor = [UIColor colorWithRed:48.0/255.0 green:63.0/255.0 blue:70.0/255.0 alpha:1];
         followingButton.backgroundColor = [UIColor colorWithRed:27.0/255.0 green:86.0/255.0 blue:149.0/255.0 alpha:1];
     }
     
+    [self reloadFeed];
 }
 #pragma mark - Table view data source
 
@@ -165,10 +177,38 @@
 }
 
 #pragma mark - Data
+- (void)getFollowingNewsTimeline:(NSString*)facebookID
+{
+    NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/get_follow_timeline"];
+    NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&request_type=%@",@"12341234",@"owner"];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setTimeoutInterval:7];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation
+                                         JSONRequestOperationWithRequest:request
+                                         success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
+                                         {;
+                                             NSLog(@"NEWS: %@",JSON);
+                                             followingNewsList = [JSON objectForKey:@"timeline"];
+                                             [feedTable reloadData];
+                                         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+                                         {
+                                             [Utility alertWithMessage:[NSString stringWithFormat:@"ERROR: %@",url]];
+                                             [self dismissViewControllerAnimated:YES completion:nil];
+                                         }];
+    [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
+    
+    [operation start];
+    
+    
+}
+
 - (void)getNewsTimeline:(NSString*)facebookID
 {
     NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/get_news_timeline"];
-    NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&request_type=%@",@"12341234",@"owner"];
+    NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&request_type=%@",facebookID,@"owner"];
+//    NSLog(@"params: %@",params);
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];

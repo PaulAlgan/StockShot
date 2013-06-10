@@ -156,6 +156,10 @@
                                                                                    image.size.height, image.size.height)];
                 }
             }
+            else
+            {
+                resultImage = image;
+            }
 //            NSLog(@"ImageResultSize: %@",NSStringFromCGSize(resultImage.size));
             resultImage = [self imageWithImage:resultImage scaledToSize:CGSizeMake(320, 320)];
             EditImageViewController *editImageView = [[EditImageViewController alloc] initWithImage:resultImage];

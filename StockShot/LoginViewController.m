@@ -70,14 +70,17 @@
             NSLog(@"Result: %@",result);
             
             User *user = [User userWithFacebookID:[result objectForKey:@"id"] InManagedObjectContext:appdelegate.managedObjectContext];
-            user.name = [result objectForKey:@"name"];
-            user.username = [result objectForKey:@"username"];
-            user.firstName = [result objectForKey:@"first_name"];
-            user.lastName = [result objectForKey:@"last_name"];
-            user.locale = [result objectForKey:@"locale"];
-            user.email = [result objectForKey:@"email"];
-            user.me = [NSNumber numberWithBool:YES];
-            [appdelegate saveContext];
+            if (!self.haveUser) {
+                user.name = [result objectForKey:@"name"];
+                user.username = [result objectForKey:@"username"];
+                user.firstName = [result objectForKey:@"first_name"];
+                user.lastName = [result objectForKey:@"last_name"];
+                user.locale = [result objectForKey:@"locale"];
+                user.email = [result objectForKey:@"email"];
+                user.me = [NSNumber numberWithBool:YES];
+                [appdelegate saveContext];
+            }
+            
             [self getPlayerWithUser:user deviceToken:@""];
 //            [self dismissViewControllerAnimated:YES completion:nil];
         }];
@@ -125,7 +128,6 @@
                         ,deviceToken,
                         @"register"];
     
-//    NSLog(@"PARA: %@",params);
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
@@ -133,7 +135,6 @@
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
                                          {
                                              NSDictionary *dictionary = [NSDictionary dictionaryWithDictionary:JSON];
-//                                             NSLog(@"USER RESULT: %@",JSON);
                                              [self dismissViewControllerAnimated:YES completion:nil];
                                              User *user = [User me];
 
@@ -167,11 +168,8 @@
                                              [Utility alertWithMessage:[NSString stringWithFormat:@"ERROR: %@",url]];
                                              [self dismissViewControllerAnimated:YES completion:nil];
                                          }];
-    [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
-    
+    [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];    
     [operation start];
-    
-    
 }
 
 - (void)didReceiveMemoryWarning

@@ -153,8 +153,11 @@ static NSString *CellClassName = @"ChatRoomCell";
 
 - (void)chatToUser:(User*)targetUser
 {
+    if (!appdelegate) appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    NSLog(@"UserTarget: %@",targetUser.debugDescription);
     Conversation *conversation = [Conversation conversationWithUser:targetUser.facebookID lastMessage:nil
                                                             context:appdelegate.managedObjectContext];
+    NSLog(@"Conversation: %@",conversation.debugDescription);
     ConversationViewController *conversationView = [[ConversationViewController alloc] init];
     conversationView.targetID = conversation.toUserID;
     [self.navigationController pushViewController:conversationView animated:YES];
@@ -250,42 +253,46 @@ static NSString *CellClassName = @"ChatRoomCell";
     [request setTimeoutInterval:7];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
                                          {
-                                            NSLog(@"JSON: %@",JSON);
+//                                            NSLog(@"JSON: %@",JSON);
                                              NSArray *chats = [JSON objectForKey:@"chat"];
                                              for (int i=0; i<chats.count; i++)
                                              {
                                                 NSDictionary *msgDict = [chats objectAtIndex:i];
-                                                ChatMessage *chatMessage = [ChatMessage messageByTime:[msgDict objectForKey:@"time"]
-                                                                                              message:[msgDict objectForKey:@"message"]
-                                                                                             receiver:[msgDict objectForKey:@"receiver"]
-                                                                                               sender:[msgDict objectForKey:@"sender"]
-                                                                                               status:[msgDict objectForKey:@"status"]
-                                                                               InManagedObjectContext:appdelegate.managedObjectContext];
-                                                 
-                                                 Conversation *conver = nil;
-//                                                 NSLog(@"FROM:%@ TO:%@ ME:%@",chatMessage.from,chatMessage.to,me.facebookID);
-                                                 if ([chatMessage.from isEqualToString:chatMessage.to]) {
+//                                                 NSLog(@"REV: %@",[msgDict objectForKey:@"receiver"]);
+                                                 if (![[msgDict objectForKey:@"receiver"] isEqualToString:@"(null)"]) {
+                                                     ChatMessage *chatMessage = [ChatMessage messageByTime:[msgDict objectForKey:@"time"]
+                                                                                                   message:[msgDict objectForKey:@"message"]
+                                                                                                  receiver:[msgDict objectForKey:@"receiver"]
+                                                                                                    sender:[msgDict objectForKey:@"sender"]
+                                                                                                    status:[msgDict objectForKey:@"status"]
+                                                                                    InManagedObjectContext:appdelegate.managedObjectContext];
                                                      
-                                                 }
-                                                 else
-                                                 {
-                                                     if ([chatMessage.from isEqualToString:me.facebookID])
-                                                     {
-//                                                         NSLog(@"USE: %@",chatMessage.to);
-                                                         conver = [Conversation conversationWithUser:chatMessage.to
-                                                                                         lastMessage:chatMessage
-                                                                                             context:appdelegate.managedObjectContext];
+                                                     Conversation *conver = nil;
+                                                     //                                                 NSLog(@"FROM:%@ TO:%@ ME:%@",chatMessage.from,chatMessage.to,me.facebookID);
+                                                     if ([chatMessage.from isEqualToString:chatMessage.to]) {
+                                                         
                                                      }
                                                      else
                                                      {
-//                                                         NSLog(@"USE: %@",chatMessage.from);
-                                                         conver = [Conversation conversationWithUser:chatMessage.from
-                                                                                         lastMessage:chatMessage
-                                                                                             context:appdelegate.managedObjectContext];
+                                                         if ([chatMessage.from isEqualToString:me.facebookID])
+                                                         {
+                                                             //                                                         NSLog(@"USE: %@",chatMessage.to);
+                                                             conver = [Conversation conversationWithUser:chatMessage.to
+                                                                                             lastMessage:chatMessage
+                                                                                                 context:appdelegate.managedObjectContext];
+                                                         }
+                                                         else
+                                                         {
+                                                             //                                                         NSLog(@"USE: %@",chatMessage.from);
+                                                             conver = [Conversation conversationWithUser:chatMessage.from
+                                                                                             lastMessage:chatMessage
+                                                                                                 context:appdelegate.managedObjectContext];
+                                                         }
+                                                         
                                                      }
 
                                                  }
-                                                
+                                                 
                                              }
 
                                              [appdelegate saveContext];

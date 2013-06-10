@@ -152,11 +152,6 @@
                                              NSLog(@"Photo: %@",[resultImages objectAtIndex:0]);
                                              numberPhotosLabel.text = [NSString stringWithFormat:@"%d Photos",resultImages.count];
                                              [_gmGridView reloadData];
-//                                             if (_gmGridView.contentSize.height < _gmGridView.frame.size.height) {
-//                                                 NSLog(@"LOW");
-//                                                 CGSize contentSize = _gmGridView.contentSize;
-//                                                 contentSize.height = 1000;
-//                                             }
                                              
                                          } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
                                          {
