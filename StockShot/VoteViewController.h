@@ -9,5 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface VoteViewController : UIViewController
+<UITableViewDataSource, UITableViewDelegate>
+{
+    
+    __weak IBOutlet UITableView *tableVote;
+}
 
 @end

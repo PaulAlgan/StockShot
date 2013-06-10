@@ -219,6 +219,10 @@
 		31EFB3F9173666B5005E772A /* ThirdViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31EFB3F7173666B5005E772A /* ThirdViewController.xib */; };
 		31EFB403173678A1005E772A /* ChatRoomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 31EFB402173678A1005E772A /* ChatRoomCell.m */; };
 		31EFB405173678B1005E772A /* ChatRoomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31EFB404173678B1005E772A /* ChatRoomCell.xib */; };
+		391BF59F17661F2C002D7467 /* NotificationSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 391BF59D17661F2B002D7467 /* NotificationSettingViewController.m */; };
+		391BF5A017661F2C002D7467 /* NotificationSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 391BF59E17661F2C002D7467 /* NotificationSettingViewController.xib */; };
+		391BF5A417661F77002D7467 /* ShareSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 391BF5A217661F77002D7467 /* ShareSettingViewController.m */; };
+		391BF5A517661F77002D7467 /* ShareSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 391BF5A317661F77002D7467 /* ShareSettingViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -533,6 +537,12 @@
 		31EFB401173678A1005E772A /* ChatRoomCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatRoomCell.h; sourceTree = "<group>"; };
 		31EFB402173678A1005E772A /* ChatRoomCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatRoomCell.m; sourceTree = "<group>"; };
 		31EFB404173678B1005E772A /* ChatRoomCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatRoomCell.xib; sourceTree = "<group>"; };
+		391BF59C17661F2B002D7467 /* NotificationSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationSettingViewController.h; sourceTree = "<group>"; };
+		391BF59D17661F2B002D7467 /* NotificationSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationSettingViewController.m; sourceTree = "<group>"; };
+		391BF59E17661F2C002D7467 /* NotificationSettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NotificationSettingViewController.xib; sourceTree = "<group>"; };
+		391BF5A117661F77002D7467 /* ShareSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareSettingViewController.h; sourceTree = "<group>"; };
+		391BF5A217661F77002D7467 /* ShareSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareSettingViewController.m; sourceTree = "<group>"; };
+		391BF5A317661F77002D7467 /* ShareSettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShareSettingViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -734,6 +744,12 @@
 				3146DDE51726BF9900D275C7 /* SettingViewController.h */,
 				3146DDE61726BF9900D275C7 /* SettingViewController.m */,
 				3146DDE71726BF9900D275C7 /* SettingViewController.xib */,
+				391BF5A117661F77002D7467 /* ShareSettingViewController.h */,
+				391BF5A217661F77002D7467 /* ShareSettingViewController.m */,
+				391BF5A317661F77002D7467 /* ShareSettingViewController.xib */,
+				391BF59C17661F2B002D7467 /* NotificationSettingViewController.h */,
+				391BF59D17661F2B002D7467 /* NotificationSettingViewController.m */,
+				391BF59E17661F2C002D7467 /* NotificationSettingViewController.xib */,
 				3146DDF41726C06200D275C7 /* PrivacyViewController.h */,
 				3146DDF51726C06200D275C7 /* PrivacyViewController.m */,
 				3146DDF61726C06200D275C7 /* PrivacyViewController.xib */,
@@ -1357,6 +1373,8 @@
 				310C90DB175E9C2400F0574F /* shareFacebook_bt@2x.png in Resources */,
 				310C90DC175E9C2400F0574F /* shareTwitter_bt.png in Resources */,
 				310C90DD175E9C2400F0574F /* shareTwitter_bt@2x.png in Resources */,
+				391BF5A017661F2C002D7467 /* NotificationSettingViewController.xib in Resources */,
+				391BF5A517661F77002D7467 /* ShareSettingViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1423,6 +1441,8 @@
 				3154FF1E175B6145001C819E /* EditProfileViewController.m in Sources */,
 				31A5D503175BD50B00B98CBC /* ImageGridViewController.m in Sources */,
 				310C90D0175E78BE00F0574F /* CommentViewController.m in Sources */,
+				391BF59F17661F2C002D7467 /* NotificationSettingViewController.m in Sources */,
+				391BF5A417661F77002D7467 /* ShareSettingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1512,8 +1532,8 @@
 		3132C1401724268F0085BB92 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Phatthana Tongon (WRESG2E6R5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Phatthana Tongon (WRESG2E6R5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Chet Chetchaiyan (L45N2BN68D)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -1527,14 +1547,15 @@
 					"\"$(SRCROOT)/GMGridView/\"/**",
 				);
 				INFOPLIST_FILE = "StockShot/StockShot-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lsqlite3.0",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "D497B66E-FBB9-402B-8E21-8EBCD2A595F7";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D497B66E-FBB9-402B-8E21-8EBCD2A595F7";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0612C56D-1409-442E-93C7-CB7FF71DBFD1";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1542,8 +1563,8 @@
 		3132C1411724268F0085BB92 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Phatthana Tongon (WRESG2E6R5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Phatthana Tongon (WRESG2E6R5)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Panithan Chumchuea (228ZLD4N69)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Panithan Chumchuea (228ZLD4N69)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -1557,14 +1578,15 @@
 					"\"$(SRCROOT)/GMGridView/\"/**",
 				);
 				INFOPLIST_FILE = "StockShot/StockShot-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lsqlite3.0",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "D497B66E-FBB9-402B-8E21-8EBCD2A595F7";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D497B66E-FBB9-402B-8E21-8EBCD2A595F7";
+				PROVISIONING_PROFILE = "445CB621-CE84-4E2F-8D7E-17EBA1ADFF4E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "445CB621-CE84-4E2F-8D7E-17EBA1ADFF4E";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

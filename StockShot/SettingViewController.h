@@ -9,5 +9,15 @@
 #import <UIKit/UIKit.h>
 
 @interface SettingViewController : UIViewController
+{
+    
+    __weak IBOutlet UIButton *btPhotoPrivate;
+}
+
+- (IBAction)btLogOutAction:(id)sender;
+- (IBAction)btShareSettingAction:(id)sender;
+- (IBAction)btPushNotiAction:(id)sender;
+- (IBAction)btClearHistoryAction:(id)sender;
+- (IBAction)btPhotoPrivateAction:(id)sender;
 
 @end
