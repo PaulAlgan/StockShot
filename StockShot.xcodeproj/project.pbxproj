@@ -20,6 +20,10 @@
 		31169F6B1754841000AB9E74 /* ChatMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 31169F6A1754841000AB9E74 /* ChatMessage.m */; };
 		31169F6E1754842300AB9E74 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 31169F6D1754842300AB9E74 /* User.m */; };
 		31169F741754866500AB9E74 /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = 31169F731754866500AB9E74 /* Photo.m */; };
+		3120059217666B1000B2EFAB /* ShareSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3120058D17666B1000B2EFAB /* ShareSettingViewController.m */; };
+		3120059317666B1000B2EFAB /* ShareSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3120058E17666B1000B2EFAB /* ShareSettingViewController.xib */; };
+		3120059417666B1000B2EFAB /* NotificationSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3120059017666B1000B2EFAB /* NotificationSettingViewController.m */; };
+		3120059517666B1000B2EFAB /* NotificationSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3120059117666B1000B2EFAB /* NotificationSettingViewController.xib */; };
 		3122AF1C175739E7003E0B4D /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = 3122AF17175739E7003E0B4D /* 1.png */; };
 		3122AF1D175739E7003E0B4D /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = 3122AF18175739E7003E0B4D /* 2.png */; };
 		3122AF1E175739E7003E0B4D /* 3.png in Resources */ = {isa = PBXBuildFile; fileRef = 3122AF19175739E7003E0B4D /* 3.png */; };
@@ -284,6 +288,12 @@
 		31169F6D1754842300AB9E74 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		31169F721754866500AB9E74 /* Photo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Photo.h; sourceTree = "<group>"; };
 		31169F731754866500AB9E74 /* Photo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Photo.m; sourceTree = "<group>"; };
+		3120058C17666B1000B2EFAB /* ShareSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareSettingViewController.h; sourceTree = "<group>"; };
+		3120058D17666B1000B2EFAB /* ShareSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareSettingViewController.m; sourceTree = "<group>"; };
+		3120058E17666B1000B2EFAB /* ShareSettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShareSettingViewController.xib; sourceTree = "<group>"; };
+		3120058F17666B1000B2EFAB /* NotificationSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationSettingViewController.h; sourceTree = "<group>"; };
+		3120059017666B1000B2EFAB /* NotificationSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationSettingViewController.m; sourceTree = "<group>"; };
+		3120059117666B1000B2EFAB /* NotificationSettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NotificationSettingViewController.xib; sourceTree = "<group>"; };
 		3122AF17175739E7003E0B4D /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
 		3122AF18175739E7003E0B4D /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
 		3122AF19175739E7003E0B4D /* 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 3.png; sourceTree = "<group>"; };
@@ -621,6 +631,22 @@
 			name = GridView;
 			sourceTree = "<group>";
 		};
+		3120058917666AEB00B2EFAB /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				3146DDE51726BF9900D275C7 /* SettingViewController.h */,
+				3146DDE61726BF9900D275C7 /* SettingViewController.m */,
+				3146DDE71726BF9900D275C7 /* SettingViewController.xib */,
+				3120058C17666B1000B2EFAB /* ShareSettingViewController.h */,
+				3120058D17666B1000B2EFAB /* ShareSettingViewController.m */,
+				3120058E17666B1000B2EFAB /* ShareSettingViewController.xib */,
+				3120058F17666B1000B2EFAB /* NotificationSettingViewController.h */,
+				3120059017666B1000B2EFAB /* NotificationSettingViewController.m */,
+				3120059117666B1000B2EFAB /* NotificationSettingViewController.xib */,
+			);
+			name = Setting;
+			sourceTree = "<group>";
+		};
 		3123201E1765CF3900C4CAD8 /* Feed */ = {
 			isa = PBXGroup;
 			children = (
@@ -762,9 +788,7 @@
 				3146DDE01726BF4000D275C7 /* VoteViewController.h */,
 				3146DDE11726BF4000D275C7 /* VoteViewController.m */,
 				3146DDE21726BF4000D275C7 /* VoteViewController.xib */,
-				3146DDE51726BF9900D275C7 /* SettingViewController.h */,
-				3146DDE61726BF9900D275C7 /* SettingViewController.m */,
-				3146DDE71726BF9900D275C7 /* SettingViewController.xib */,
+				3120058917666AEB00B2EFAB /* Setting */,
 				3146DDF41726C06200D275C7 /* PrivacyViewController.h */,
 				3146DDF51726C06200D275C7 /* PrivacyViewController.m */,
 				3146DDF61726C06200D275C7 /* PrivacyViewController.xib */,
@@ -1395,6 +1419,8 @@
 				3123201D1765CCE400C4CAD8 /* CommentCell.xib in Resources */,
 				312320251765CF8B00C4CAD8 /* NewsCell.xib in Resources */,
 				31CDD16E176616EC003C008F /* FollowingNewsCell.xib in Resources */,
+				3120059317666B1000B2EFAB /* ShareSettingViewController.xib in Resources */,
+				3120059517666B1000B2EFAB /* NotificationSettingViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1463,6 +1489,8 @@
 				310C90D0175E78BE00F0574F /* CommentViewController.m in Sources */,
 				312320191765CCA800C4CAD8 /* CommentCell.m in Sources */,
 				312320211765CF7300C4CAD8 /* NewsCell.m in Sources */,
+				3120059217666B1000B2EFAB /* ShareSettingViewController.m in Sources */,
+				3120059417666B1000B2EFAB /* NotificationSettingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

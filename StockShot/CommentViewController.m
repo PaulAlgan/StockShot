@@ -7,10 +7,11 @@
 //
 
 #import "CommentViewController.h"
-#import "MessageCell.h"
+//#import "MessageCell.h"
+#import "CommentCell.h"
 #import "User+addition.h"
 #import "AFJSONRequestOperation.h"
-static NSString *CellClassName = @"MessageCell";
+static NSString *CellClassName = @"CommentCell";
 
 @interface CommentViewController ()
 {
@@ -58,7 +59,7 @@ static NSString *CellClassName = @"MessageCell";
                                              selector:@selector(receiveTestNotification:)
                                                  name:@"TestNotification"
                                                object:nil];
-    
+    NSLog(@"Comments: %@",comments);
 }
 
 
@@ -72,7 +73,23 @@ static NSString *CellClassName = @"MessageCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 60;
+    if (comments.count > 0)
+    {
+        CommentCell *cell = [[CommentCell alloc] init];
+        NSDictionary *comment = [comments objectAtIndex:indexPath.row];
+        int rowHeight = [cell rowHeightWithComment:comment];
+        
+        if (rowHeight < 60) {
+            return 60;
+        }
+        else{
+            return rowHeight + 20+13;
+        }
+    }
+    else
+    {
+        return 60;
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -87,7 +104,7 @@ static NSString *CellClassName = @"MessageCell";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    MessageCell *cell = (MessageCell *)[tableView dequeueReusableCellWithIdentifier:CellClassName];
+    CommentCell *cell = (CommentCell *)[tableView dequeueReusableCellWithIdentifier:CellClassName];
     if (!cell)
     {
         NSArray *topLevelItems = [cellLoader instantiateWithOwner:self options:nil];
@@ -97,7 +114,7 @@ static NSString *CellClassName = @"MessageCell";
     if (comments > 0) {
 //        ChatMessage *chatMessage = [fetchedResultsController objectAtIndexPath:indexPath];
         NSDictionary *comment = [comments objectAtIndex:indexPath.row];
-        cell.message = [comment objectForKey:@"comment"];
+        [cell setComment:comment];
 //        cell.userName = chatMessage.from;
 //        cell.time = chatMessage.timeDate;
 //        cell.userID = chatMessage.from;

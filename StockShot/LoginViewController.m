@@ -135,6 +135,7 @@
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
                                          {
                                              NSDictionary *dictionary = [NSDictionary dictionaryWithDictionary:JSON];
+                                             NSLog(@"getPlayerWithUser: %@",dictionary);
                                              [self dismissViewControllerAnimated:YES completion:nil];
                                              User *user = [User me];
 

@@ -57,7 +57,7 @@
 - (void)likePhotoWithID:(NSString*)photoKey
 {
     AppDelegate *appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    User *me = [User meInManagedObjectContext:appdelegate.managedObjectContext];
+    User *me = [User me];
     NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/like"];
     NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&photo_key=%@",me.facebookID,photoKey];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];

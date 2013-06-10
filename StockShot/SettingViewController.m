@@ -8,6 +8,10 @@
 
 #import "SettingViewController.h"
 #import "IIViewDeckController.h"
+
+#import "ShareSettingViewController.h"
+#import "NotificationSettingViewController.h"
+
 @interface SettingViewController ()
 
 @end
@@ -44,4 +48,30 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)btLogOutAction:(id)sender {
+}
+
+- (IBAction)btShareSettingAction:(id)sender {
+    ShareSettingViewController* view = [[ShareSettingViewController alloc] initWithNibName:@"ShareSettingViewController" bundle:nil];
+    [self.navigationController pushViewController:view animated:YES];
+    view = nil;
+}
+
+- (IBAction)btPushNotiAction:(id)sender {
+    NotificationSettingViewController* view = [[NotificationSettingViewController alloc] initWithNibName:@"NotificationSettingViewController" bundle:nil];
+    [self.navigationController pushViewController:view animated:YES];
+    view = nil;
+}
+
+- (IBAction)btClearHistoryAction:(id)sender {
+}
+
+- (IBAction)btPhotoPrivateAction:(id)sender {
+    [btPhotoPrivate setSelected:![btPhotoPrivate isSelected]];
+}
+
+- (void)viewDidUnload {
+    btPhotoPrivate = nil;
+    [super viewDidUnload];
+}
 @end

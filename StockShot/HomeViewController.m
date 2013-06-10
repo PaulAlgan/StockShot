@@ -51,7 +51,7 @@ static NSString *CellClassName = @"ImageViewCell";
     [refreshButton addTarget:self action:@selector(reloadTimeline) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:refreshButton];
     
-    me = [User meInManagedObjectContext:appdelegate.managedObjectContext];
+    me = [User me];
     LoginViewController *loginView = [[LoginViewController alloc] init];
     if (!me)
     {

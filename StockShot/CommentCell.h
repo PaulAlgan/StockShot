@@ -10,9 +10,11 @@
 
 @interface CommentCell : UITableViewCell
 {
-    
+    IBOutlet UIImageView *profileImageView;
+    IBOutlet UILabel *contentLable;
+    IBOutlet UILabel *timeLable;
 }
 @property (nonatomic, retain) NSDictionary *comment;
 - (void)setComment:(NSDictionary *)comment;
-
+- (int)rowHeightWithComment:(NSDictionary*)comment;
 @end
