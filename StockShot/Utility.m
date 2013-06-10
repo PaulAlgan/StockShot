@@ -230,23 +230,24 @@
     originalFrame.origin = CGPointMake(0,0);
     originalFrame.size = originalSize;
     
-    CGRect croppingRect = [[editInfo valueForKey:@"UIImagePickerControllerCropRect"] CGRectValue];
+    CGRect croppingRect = [[editInfo valueForKey:UIImagePickerControllerCropRect] CGRectValue];
     CGSize croppingRectSize = CGSizeMake(croppingRect.size.width, croppingRect.size.height);
+//    NSLog(@"CropRect: %@",NSStringFromCGRect(croppingRect));
     
     CGSize croppedScaledImageSize = anImage.size;
     
-    float scaledBarClipHeight = 80;
+    float scaledBarClipHeight = 0;
     
     CGSize scaledImageSize;
     float scale;
     
-    if(!CGSizeEqualToSize(croppedScaledImageSize, originalSize)){
+//    NSLog(@"croppedScaledImageSize: %@ || originalSize: %@",NSStringFromCGSize(croppedScaledImageSize),NSStringFromCGSize(originalSize));
+    if(CGSizeEqualToSize(croppedScaledImageSize, originalSize)){
         
         scale = croppedScaledImageSize.width/croppingRectSize.width;
         float barClipHeight = scaledBarClipHeight/scale;
         
         croppingRect.origin.y -= barClipHeight;
-        croppingRect.size.height += (2*barClipHeight);
         
         if(croppingRect.origin.y<=0){
             croppingRect.size.height += croppingRect.origin.y;
@@ -261,8 +262,9 @@
         scaledImageSize = croppingRect.size;
         scaledImageSize.width *= scale;
         scaledImageSize.height *= scale;
-        
+//        NSLog(@"CropRect: %@",NSStringFromCGRect(croppingRect));
         newImage =  [Utility cropImage:originalImage to:croppingRect andScaleTo:scaledImageSize];
+
         
     }else{
         

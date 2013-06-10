@@ -94,9 +94,9 @@ static NSString *CellClassName = @"ImageViewCell";
     NSDictionary *player = [[resultImages objectAtIndex:button.tag-200] objectForKey:@"player"];
 
     User *user = [User userWithFacebookID:[player objectForKey:@"facebook_id"] InManagedObjectContext:appdelegate.managedObjectContext];
-//    NSLog(@"user: %@",[user debugDescription]);
-    
-    [appdelegate selectProfilePageWithUser:user];
+    ProfileViewController *profileVC = [[ProfileViewController alloc] initWithUser:user];
+    [self.navigationController pushViewController:profileVC animated:YES];
+//    [appdelegate selectProfilePageWithUser:user];
 }
 
 #pragma mark - Table view data source
@@ -200,11 +200,11 @@ static NSString *CellClassName = @"ImageViewCell";
         [userImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture",[player objectForKey:@"facebook_id"]]]
                        placeholderImage:[UIImage imageNamed:@"profileImage.png"]];
         
-//        NSString *dateString = [[resultImages objectAtIndex:section] objectForKey:@"date"];
-//        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-//        formatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSSSS";
-//        [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-//        timeLabel.text = [self timeAgoWithDate:[formatter dateFromString:dateString]];
+        NSString *dateString = [[resultImages objectAtIndex:section] objectForKey:@"create_date"];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSSSS";
+        [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+        timeLabel.text = [self timeAgoWithDate:[formatter dateFromString:dateString]];
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -250,8 +250,9 @@ static NSString *CellClassName = @"ImageViewCell";
 //    NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/get_follow_timeline"];
     NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/get_user_timeline"];
     //'request_type': ['owner, 'other''] 
-//    NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@",@"12341234"];
+//    NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@",@"100004485074537"];
     NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@",facebookID];
+    NSLog(@"getTimeline: %@",params);
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];

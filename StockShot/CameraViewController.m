@@ -141,10 +141,11 @@
     if ([picker sourceType] == UIImagePickerControllerSourceTypePhotoLibrary) {
         NSLog(@"UIImagePickerControllerSourceTypePhotoLibrary");
         image = [Utility scaleImage:[info objectForKey:UIImagePickerControllerOriginalImage] withEditingInfo:info];
+//        image = [info objectForKey:UIImagePickerControllerEditedImage];
         [picker dismissViewControllerAnimated:YES completion:^(void)
         {
             UIImage  *resultImage = nil;
-//            NSLog(@"ImageSize: %@",NSStringFromCGSize(image.size));
+            NSLog(@"ImageSize: %@",NSStringFromCGSize(image.size));
             if (image.size.width != image.size.height){
                 if (image.size.width > image.size.height){
                     resultImage = [Utility imageByCropping:image toRect:CGRectMake(0, (image.size.width-image.size.height)/2.0,
@@ -160,8 +161,9 @@
             {
                 resultImage = image;
             }
-//            NSLog(@"ImageResultSize: %@",NSStringFromCGSize(resultImage.size));
-            resultImage = [self imageWithImage:resultImage scaledToSize:CGSizeMake(320, 320)];
+            NSLog(@"ImageResultSize: %@",NSStringFromCGSize(resultImage.size));
+            resultImage = [self imageWithImage:resultImage scaledToSize:CGSizeMake(720, 720)];
+            NSLog(@"ImageResultSize: %@",NSStringFromCGSize(resultImage.size));
             EditImageViewController *editImageView = [[EditImageViewController alloc] initWithImage:resultImage];
             [self.navigationController pushViewController:editImageView animated:NO];
         }];
@@ -178,7 +180,7 @@
         resultImage = [UIImage imageWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation];
         CGImageRelease(imageRef);
 //        image = resultImage;
-        resultImage = [self imageWithImage:[resultImage fixOrientation] scaledToSize:CGSizeMake(100, 100)];
+        resultImage = [self imageWithImage:[resultImage fixOrientation] scaledToSize:CGSizeMake(720, 720)];
 //        NSLog(@"IMG W: %lf",resultImage.size.width);
         
         EditImageViewController *editImageView = [[EditImageViewController alloc]
