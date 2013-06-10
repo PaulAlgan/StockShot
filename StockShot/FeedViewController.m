@@ -93,20 +93,41 @@ static NSString *CellClassName = @"NewsCell";
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NewsCell *cell = [[NewsCell alloc] init];
-    if (newsList.count > 0)
-    {
-        NSDictionary *newsFeed = [newsList objectAtIndex:indexPath.row];
-        int rowHeight = [cell getRowHeightWithNewsFeed:newsFeed];
-        if (rowHeight < 46){
-            return 46;
+    
+    if (newsButton.selected) {
+        if (newsList.count > 0)
+        {
+            NSDictionary *newsFeed = [newsList objectAtIndex:indexPath.row];
+            int rowHeight = [cell getRowHeightWithNewsFeed:newsFeed];
+            if (rowHeight < 46){
+                return 46;
+            }
+            else{
+                return rowHeight + 8;
+            }
         }
         else{
-            return rowHeight + 8;
+            return 46;
         }
     }
-    else{
-        return 46;
+    else
+    {
+        if (followingNewsList.count > 0)
+        {
+            NSDictionary *newsFeed = [followingNewsList objectAtIndex:indexPath.row];
+            int rowHeight = [cell getRowHeightWithNewsFeed:newsFeed];
+            if (rowHeight < 46){
+                return 46;
+            }
+            else{
+                return rowHeight + 8;
+            }
+        }
+        else{
+            return 46;
+        }
     }
+    
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -114,7 +135,14 @@ static NSString *CellClassName = @"NewsCell";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return newsList.count;
+    if (newsButton.selected)
+    {
+        return newsList.count;
+    }
+    else
+    {
+        return followingNewsList.count;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -126,11 +154,23 @@ static NSString *CellClassName = @"NewsCell";
         cell = [topLevelItems objectAtIndex:0];
     }
     
-    if (newsList.count > 0)
+    if (newsButton.selected)
     {
-        NSDictionary *newsFeed = [newsList objectAtIndex:indexPath.row];
-        [cell setNewsFeed:newsFeed];
+        if (newsList.count > 0)
+        {
+            NSDictionary *newsFeed = [newsList objectAtIndex:indexPath.row];
+            [cell setNewsFeed:newsFeed];
+        }
     }
+    else
+    {
+        if (followingNewsList.count > 0)
+        {
+            NSDictionary *newsFeed = [followingNewsList objectAtIndex:indexPath.row];
+            [cell setNewsFeed:newsFeed];
+        }
+    }
+    
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
@@ -152,7 +192,7 @@ static NSString *CellClassName = @"NewsCell";
 - (void)getFollowingNewsTimeline:(NSString*)facebookID
 {
     NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/get_follow_timeline"];
-    NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&request_type=%@",@"12341234",@"owner"];
+    NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&request_type=%@",facebookID,@"owner"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
@@ -189,7 +229,7 @@ static NSString *CellClassName = @"NewsCell";
                                          JSONRequestOperationWithRequest:request
                                          success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
                                          {;
-                                             NSLog(@"NEWS: %@",JSON);
+//                                             NSLog(@"NEWS: %@",JSON);
                                              newsList = [JSON objectForKey:@"timeline"];
                                              [feedTable reloadData];
                                          } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
