@@ -28,18 +28,12 @@ static NSString *CellClassName = @"ImageViewCell";
     __gm_weak GMGridView *_gmGridView;
     User *me;
     AppDelegate *appdelegate;
+    BOOL keyboardShow;
 }
 @end
 
 @implementation SearchViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-    }
-    return self;
-}
 
 - (id)init{
     self = [super init];
@@ -57,7 +51,6 @@ static NSString *CellClassName = @"ImageViewCell";
     appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     searchType = [[NSString alloc] init];
     searchType = @"user";
-    [self.searchDisplayController.searchResultsTableView registerNib:cellLoader forHeaderFooterViewReuseIdentifier:CellClassName];
 
     self.navigationItem.leftBarButtonItem = [Utility menuBarButtonWithID:self];
     UIButton *refreshButton = [Utility refreshButton];
@@ -65,8 +58,24 @@ static NSString *CellClassName = @"ImageViewCell";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:refreshButton];
     
     resultImages = [[NSMutableArray alloc] init];
-    [self loadGridView];
-    _gmGridView.hidden = YES;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receiveTestNotification:)
+                                                 name:@"TestNotification"
+                                               object:nil];
+    
+//    - 51
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:YES];
+    [searchTextField resignFirstResponder];
 }
 
 - (void)reloadPhotos
@@ -78,6 +87,88 @@ static NSString *CellClassName = @"ImageViewCell";
 - (void)loadGridView
 {
     
+}
+
+#pragma mark - IBAction
+- (IBAction)touchCancel:(id)sender
+{
+    [searchTextField resignFirstResponder];
+}
+
+- (IBAction)touchContentType:(id)sender
+{
+    UIButton *button = (UIButton*)sender;
+    
+    if (button == userTypeButton)
+    {
+        userTypeButton.selected = YES;
+        userTypeButton.backgroundColor = [UIColor colorWithRed:33.0/255.0 green:107.0/255.0 blue:166.0/255.0 alpha:1];
+        
+        hashTagTypeButton.selected = NO;
+        hashTagTypeButton.backgroundColor = [UIColor colorWithRed:63.0/255.0 green:80.0/255.0 blue:88.0/255.0 alpha:1];
+
+    }
+    else
+    {
+        userTypeButton.selected = NO;
+        userTypeButton.backgroundColor = [UIColor colorWithRed:63.0/255.0 green:80.0/255.0 blue:88.0/255.0 alpha:1];
+        
+        hashTagTypeButton.selected = YES;
+        hashTagTypeButton.backgroundColor = [UIColor colorWithRed:33.0/255.0 green:107.0/255.0 blue:166.0/255.0 alpha:1];
+    }
+    
+    [resultTableView reloadData];
+    
+}
+# pragma mark Keyboard Notifications
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+    keyboardShow = YES;
+    [self resizeViewWithOptions:[notification userInfo]];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+    keyboardShow = NO;
+    [self resizeViewWithOptions:[notification userInfo]];
+}
+
+- (void)resizeViewWithOptions:(NSDictionary *)options
+{
+    NSTimeInterval animationDuration;
+    UIViewAnimationCurve animationCurve;
+    CGRect keyboardEndFrame;
+    [[options objectForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
+    [[options objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
+    [[options objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardEndFrame];
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationCurve:animationCurve];
+    [UIView setAnimationDuration:animationDuration];
+    
+    CGRect viewFrame = self.view.frame;
+    NSLog(@"viewFrame y: %@", NSStringFromCGRect(viewFrame));
+    
+    CGRect keyboardFrameEndRelative = [self.view convertRect:keyboardEndFrame fromView:nil];
+    NSLog(@"self.view: %@", self.view);
+    NSLog(@"keyboardFrameEndRelative: %@", NSStringFromCGRect(keyboardFrameEndRelative));
+    
+    viewFrame.size.height =  keyboardFrameEndRelative.origin.y;// - textInputView.frame.size.height;
+    self.view.frame = viewFrame;
+    
+    CGRect cancelRect = cancelButton.frame;
+    CGRect searchRect = searchView.frame;
+    if (keyboardShow) {
+        cancelRect.origin.x = 269;
+        searchRect.size.width = 260;
+    }
+    else{
+        cancelRect.origin.x = 320;
+        searchRect.size.width = 310;
+    }
+    cancelButton.frame = cancelRect;
+    searchView.frame = searchRect;
+    
+    [UIView commitAnimations];
 }
 
 #pragma mark GMGridViewDataSource
@@ -102,7 +193,7 @@ static NSString *CellClassName = @"ImageViewCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {    
-    if ([searchType isEqualToString:@"hashtag"])
+    if (hashTagTypeButton.selected)
         return hotSearch.count;
     else
         return resultUsers.count;
@@ -110,63 +201,46 @@ static NSString *CellClassName = @"ImageViewCell";
     
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(tableView == self.searchDisplayController.searchResultsTableView)
+    if (hashTagTypeButton.selected)
     {
-        if ([searchType isEqualToString:@"hashtag"])
-        {
-            static NSString *CellIdentifier = @"TagCell";
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-            if (cell == nil) {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-            }
-            
-            if (hotSearch.count)
-            {
-                cell.textLabel.text = [hotSearch objectAtIndex:indexPath.row];
-            }
-            
-            return cell;
-        }
-        else
-        {
-            static NSString *CellIdentifier = @"UserCell";
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-            if (cell == nil) {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-            }
-            
-            if (resultUsers.count > 0)
-            {
-                User *user = [resultUsers objectAtIndex:indexPath.row];
-                cell.textLabel.text = user.username;
-                cell.detailTextLabel.text = user.name;
-                [cell.imageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture",user.facebookID]]
-                               placeholderImage:[UIImage imageNamed:@"profileImage.png"]];
-            }
-            
-            
-            return cell;
-        }
-        
-    }
-    else
-    {
-        static NSString *CellIdentifier = @"Cell";
+        static NSString *CellIdentifier = @"TagCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
-        cell.textLabel.text = @"Hello";
+        
+        if (hotSearch.count)
+        {
+            cell.textLabel.text = [hotSearch objectAtIndex:indexPath.row];
+        }
         return cell;
     }
-
+    else
+    {
+        static NSString *CellIdentifier = @"UserCell";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        }
+        
+        if (resultUsers.count > 0)
+        {
+            User *user = [resultUsers objectAtIndex:indexPath.row];
+            cell.textLabel.text = user.username;
+            cell.detailTextLabel.text = user.name;
+            [cell.imageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture",user.facebookID]]
+                           placeholderImage:[UIImage imageNamed:@"profileImage.png"]];
+        }
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        return cell;
+    }
 }
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([searchType isEqualToString:@"hashtag"])
+    if (hashTagTypeButton.selected)
     {
         ImageGridViewController *imageGridView = [[ImageGridViewController alloc]
                                                   initWithHashTagName:[hotSearch objectAtIndex:indexPath.row]];
@@ -180,63 +254,31 @@ static NSString *CellClassName = @"ImageViewCell";
     
 }
 
-#pragma mark -
-#pragma mark UISearchDisplayController Delegate Methods
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+#pragma mark UITextField Delegate Methods
+- (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    NSLog(@"BEGIN SEARCH");
+    NSLog(@"Begin Edit");
     [self getHotSerach];
 }
 
--(void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
 {
-    NSLog(@"SEARCH: %@",searchBar.text);
-    if ([searchType isEqualToString:@"hashtag"])
-    {
-//        [self getPhotoFromHashTag:searchBar.text];
-    }
-    else
-    {
-        [self getPhotoFromHashTag:searchBar.text];
-    }
-    _gmGridView.hidden = NO;
-//    NSLog(@"%f %f %f %f"
-//          ,self.searchDisplayController.searchResultsTableView.frame.origin.x
-//          ,self.searchDisplayController.searchResultsTableView.frame.origin.y
-//          ,self.searchDisplayController.searchResultsTableView.frame.size.width
-//          ,self.searchDisplayController.searchResultsTableView.frame.size.height);
-
-}
-
-
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
-{
-//    NSLog(@"shouldReloadTableForSearchString");
-//    [self filterContentForSearchText:searchString scope:
-//     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:[self.searchDisplayController.searchBar selectedScopeButtonIndex]]];
-//
-    // Return YES to cause the search result table view to be reloaded.
     return YES;
 }
 
-
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    NSLog(@"shouldReloadTableForSearchScope");
+    [searchTextField resignFirstResponder];
+    NSLog(@"SEARCH: %@",textField.text);
     
-    if (searchOption == 0) {
-        searchType = @"user";
-    }
-    else{
-        searchType = @"hashtag";
-    }
-    [self.searchDisplayController.searchResultsTableView reloadData];
+    [self searchFromString:textField.text];
+    
+    return  YES;
+}
 
-//    [self filterContentForSearchText:[self.searchDisplayController.searchBar text] scope:
-//     [[self.searchDisplayController.searchBar scopeButtonTitles] objectAtIndex:searchOption]];
-    
-    // Return YES to cause the search result table view to be reloaded.
-    return YES;
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    NSLog(@"End Edit");
 }
 
 
@@ -252,8 +294,7 @@ static NSString *CellClassName = @"ImageViewCell";
                                          {
                                              NSLog(@"JSON: %@",JSON);
                                              hotSearch = [JSON objectForKey:@"keyword"];
-                                             [self.searchDisplayController.searchResultsTableView reloadData];
-                                             
+                                             [resultTableView reloadData];
                                          } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
                                          {
                                              [Utility alertWithMessage:[NSString stringWithFormat:@"ERROR: %@",url]];
@@ -264,7 +305,7 @@ static NSString *CellClassName = @"ImageViewCell";
     [operation start];
 }
 
-- (void)getPhotoFromHashTag:(NSString*)hashTag
+- (void)searchFromString:(NSString*)hashTag
 {
     me = [User me];
     NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/search"];
@@ -316,7 +357,7 @@ static NSString *CellClassName = @"ImageViewCell";
                                              }
                                              resultUsers = [NSArray arrayWithArray:usersTemp];
                                              NSLog(@"ResultUser: %@",resultUsers);
-                                             [self.searchDisplayController.searchResultsTableView reloadData];
+                                             [resultTableView reloadData];
                                          } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
                                          {
                                              [Utility alertWithMessage:[NSString stringWithFormat:@"ERROR: %@",url]];

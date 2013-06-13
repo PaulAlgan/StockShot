@@ -38,7 +38,11 @@ static NSString *CellClassName = @"CommentCell";
     if (self) {
         self.hidesBottomBarWhenPushed = YES;
         self.photoDict = dict;
-        comments = [dict objectForKey:@"comment"];
+        NSArray *commentTempArray = [dict objectForKey:@"comment"];
+        comments = [[NSMutableArray alloc] init];
+        for (int i=0; i<commentTempArray.count; i++){
+            [comments insertObject:[commentTempArray objectAtIndex:i] atIndex:0];
+        }
     }
     return self;
 }
@@ -48,7 +52,7 @@ static NSString *CellClassName = @"CommentCell";
     self.title = @"Comments";
     self.navigationItem.leftBarButtonItem = [Utility backButton:self];
     
-    cellLoader = [UINib nibWithNibName:CellClassName bundle:[NSBundle mainBundle]];    
+    cellLoader = [UINib nibWithNibName:CellClassName bundle:[NSBundle mainBundle]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:)
                                                  name:UIKeyboardWillShowNotification object:nil];
@@ -62,11 +66,21 @@ static NSString *CellClassName = @"CommentCell";
     NSLog(@"Comments: %@",comments);
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:YES];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    [self scrollToBottomAnimated:NO];
+}
 #pragma mark - IBAction
 - (IBAction)sendMessage:(id)sender
 {
-    chatTextView.text = @"";
     [self commentOnPhotoKey:[self.photoDict objectForKey:@"key"] message:chatTextView.text];
+    chatTextView.text = @"";
 }
 #pragma mark - UITabelViewDatasource
 
@@ -158,11 +172,11 @@ static NSString *CellClassName = @"CommentCell";
     [UIView setAnimationDuration:animationDuration];
     
     CGRect viewFrame = self.view.frame;
-//    NSLog(@"viewFrame y: %@", NSStringFromCGRect(viewFrame));
+    //    NSLog(@"viewFrame y: %@", NSStringFromCGRect(viewFrame));
     
     CGRect keyboardFrameEndRelative = [self.view convertRect:keyboardEndFrame fromView:nil];
-//    NSLog(@"self.view: %@", self.view);
-//    NSLog(@"keyboardFrameEndRelative: %@", NSStringFromCGRect(keyboardFrameEndRelative));
+    //    NSLog(@"self.view: %@", self.view);
+    //    NSLog(@"keyboardFrameEndRelative: %@", NSStringFromCGRect(keyboardFrameEndRelative));
     
     viewFrame.size.height =  keyboardFrameEndRelative.origin.y;// - textInputView.frame.size.height;
     self.view.frame = viewFrame;
@@ -172,12 +186,12 @@ static NSString *CellClassName = @"CommentCell";
 }
 
 - (void)scrollToBottomAnimated:(BOOL)animated {
-//    NSInteger bottomRow = [[fetchedResultsController fetchedObjects] count] - 1;
-//    if (bottomRow >= 0) {
-//        NSIndexPath *indexpath = [NSIndexPath indexPathForItem:[[fetchedResultsController fetchedObjects] count]-1 inSection:0];
-//        [contentTableView scrollToRowAtIndexPath:indexpath
-//                                atScrollPosition:UITableViewScrollPositionBottom animated:animated];
-//    }
+    NSInteger bottomRow = [comments count] - 1;
+    if (bottomRow >= 0) {
+        NSIndexPath *indexpath = [NSIndexPath indexPathForItem:bottomRow inSection:0];
+        [contentTableView scrollToRowAtIndexPath:indexpath
+                                atScrollPosition:UITableViewScrollPositionBottom animated:animated];
+    }
 }
 
 #pragma mark UITextViewDelegate
@@ -191,20 +205,19 @@ static NSString *CellClassName = @"CommentCell";
     else
     {
         sendButton.enabled = NO;
-    }    
+    }
 }
 
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-//    [chatTextView resignFirstResponder];
+    //    [chatTextView resignFirstResponder];
 }
 
 #pragma mark - DATA
 - (void)commentOnPhotoKey:(NSString*)key message:(NSString*)msg
 {
     me = [User me];
-    
     NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/comment"];
     NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&photo_key=%@&message=%@",me.facebookID,key,msg];
     
@@ -220,16 +233,16 @@ static NSString *CellClassName = @"CommentCell";
                                              formatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSSSS";
                                              [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
                                              
-                                             
-//                                             NSLog(@"SEND RESULT: %@",JSON);
-//                                             NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
-//                                                                   msg, @"comment",
-//                                                                   [formatter stringFromDate:todaydate] , @"date",
-//                                                                   me.facebookID, @"player",
-//                                                                   nil];
-//                                             [comments addObject:dict];
+                                             //                                             NSLog(@"SEND RESULT: %@",JSON);
+                                             NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                                                   msg, @"comment",
+                                                                   [formatter stringFromDate:todaydate] , @"date",
+                                                                   me.facebookID, @"player",
+                                                                   nil];
+                                             [comments addObject:dict];
                                              [contentTableView reloadData];
-                                             [Utility alertWithMessage:[NSString stringWithFormat:@"Comment: %@",[JSON objectForKey:@"result"]]];
+                                             [self scrollToBottomAnimated:YES];
+                                             //                                             [Utility alertWithMessage:[NSString stringWithFormat:@"Comment: %@",[JSON objectForKey:@"result"]]];
                                              
                                          } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
                                          {
@@ -238,7 +251,7 @@ static NSString *CellClassName = @"CommentCell";
                                          }];
     [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
     [operation start];
-
+    
 }
 
 - (void)didReceiveMemoryWarning

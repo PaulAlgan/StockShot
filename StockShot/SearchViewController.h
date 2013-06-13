@@ -9,9 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "ImageViewCell.h"
 #import "GMGridView.h"
-@interface SearchViewController : UITableViewController
-<UISearchDisplayDelegate, UISearchBarDelegate,UITextFieldDelegate,GMGridViewActionDelegate,GMGridViewDataSource>
+@interface SearchViewController : UIViewController
+<UITextFieldDelegate,GMGridViewActionDelegate,GMGridViewDataSource>
 {
     UINib *cellLoader;
+    IBOutlet UIView *searchView;
+    IBOutlet UITextField *searchTextField;
+    IBOutlet UIButton *cancelButton;
+    IBOutlet UITableView *resultTableView;
+    IBOutlet UIButton *userTypeButton;
+    IBOutlet UIButton *hashTagTypeButton;
+    
 }
+- (IBAction)touchCancel:(id)sender;
+- (IBAction)touchContentType:(id)sender;
 @end

@@ -140,7 +140,7 @@
     [self.tabBarController.view addSubview:profileNavigation.view];
 
     
-    NSLog(@"H: %lf",profileNavigation.view.frame.size.height);
+//    NSLog(@"H: %lf",profileNavigation.view.frame.size.height);
 }
 - (BOOL)tabBarController:(UITabBarController *)atabBarController shouldSelectViewController:(UIViewController *)viewController
 {

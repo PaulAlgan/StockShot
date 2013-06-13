@@ -28,22 +28,22 @@
     size = [contentString sizeWithFont:[UIFont systemFontOfSize:13]
                      constrainedToSize:CGSizeMake(242, CGFLOAT_MAX)
                          lineBreakMode:NSLineBreakByWordWrapping];
-    NSLog(@"H: %@  contentW: %f",NSStringFromCGSize(size),contentLable.frame.size.width);
+//    NSLog(@"H: %@  contentW: %f",NSStringFromCGSize(size),contentLable.frame.size.width);
     return size.height;
 }
 
 - (void)setComment:(NSDictionary *)comment
 {
     NSString *userID = [comment objectForKey:@"player"];
-
+    
     NSString *contentString = [self contentByComment:comment];
     CGSize size;
     size = [contentString sizeWithFont:[UIFont systemFontOfSize:13]
                      constrainedToSize:CGSizeMake(242, CGFLOAT_MAX)
                          lineBreakMode:NSLineBreakByWordWrapping];
-
     
-
+    
+    
     [profileImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture",userID]]
                      placeholderImage:[UIImage imageNamed:@"profileImage.png"]];
     
@@ -52,15 +52,15 @@
     contentLable.frame = contentRect;
     contentLable.text = contentString;
     
-//    CGRect timeRect = timeLable.frame;
-//    timeRect.origin.y = contentRect.origin.y+contentRect.size.height;
-//    timeLable.frame = timeRect;
+    //    CGRect timeRect = timeLable.frame;
+    //    timeRect.origin.y = contentRect.origin.y+contentRect.size.height;
+    //    timeLable.frame = timeRect;
     
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSSSS";
     [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-
+    
     timeLable.text = [Utility timeAgoWithDate:[formatter dateFromString:[comment objectForKey:@"date"]]];
 }
 
@@ -77,7 +77,7 @@
     }else{
         contentString = [contentString stringByAppendingString:userID];
     }
-    contentString = [contentString stringByAppendingFormat:@" %@",commentString];
+    contentString = [contentString stringByAppendingFormat:@": %@",commentString];
     
     return contentString;
 }
@@ -85,7 +85,7 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
-
+    
     // Configure the view for the selected state
 }
 
