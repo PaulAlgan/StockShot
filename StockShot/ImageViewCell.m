@@ -60,6 +60,7 @@
     User *me = [User me];
     NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/like"];
     NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&photo_key=%@",me.facebookID,photoKey];
+//    NSLog(@"Like: %@",params);
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];

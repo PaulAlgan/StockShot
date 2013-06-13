@@ -43,23 +43,29 @@
 
 - (void)setNewsFeed:(NSDictionary *)newsFeed
 {
-//    _newsFeed = newsFeed;
+    _newsFeed = newsFeed;
     NSDictionary *player = [newsFeed objectForKey:@"action_player"];
     NSString *contentString = [self contentStringFromNewsFeed:newsFeed];
     
     NSDictionary *photo = nil;
-    if ([newsFeed objectForKey:@"photo"]){
+    NSString *photoKey = nil;
+    if ([[newsFeed objectForKey:@"photo"] isKindOfClass:[NSDictionary class]])
+    {
         photo = [newsFeed objectForKey:@"photo"];
+        photoKey = [photo objectForKey:@"key"];
     }
-//    NSLog(@"Content: %@",contentString);
+    else if ([[newsFeed objectForKey:@"photo"] isKindOfClass:[NSString class]])
+    {
+        photoKey = [newsFeed objectForKey:@"photo"];
+    }
     contentLabel.text = contentString;
     [profileImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture",[player objectForKey:@"facebook_id"]]]
                      placeholderImage:[UIImage imageNamed:@"profileImage.png"]];
     
     
     CGRect labelRect = contentLabel.frame;
-    if (photo) {
-        [targetImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://stockshot-kk.appspot.com/api/photo?photo_key=%@",[photo objectForKey:@"key"]]]
+    if (photoKey) {
+        [targetImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://stockshot-kk.appspot.com/api/photo?photo_key=%@",photoKey]]
                         placeholderImage:[UIImage imageNamed:@"profileImage.png"]];
         labelRect.size.width = 205;
     }
@@ -72,7 +78,7 @@
                      constrainedToSize:CGSizeMake(labelRect.size.width, CGFLOAT_MAX)
                          lineBreakMode:NSLineBreakByWordWrapping];
     labelRect.size.height = size.height;
-    NSLog(@"LABEL_H: %f",labelRect.size.height);
+//    NSLog(@"LABEL_H: %f",labelRect.size.height);
     contentLabel.frame = labelRect;
 
 }
