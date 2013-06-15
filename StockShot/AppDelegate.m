@@ -101,15 +101,11 @@
     deckController.leftLedge = 83-20;
     deckController.centerhiddenInteractivity = IIViewDeckCenterHiddenNotUserInteractiveWithTapToClose;
     [self.window setRootViewController:deckController];
-    
-//    if (![Utility haveCheckingKey:@"FacebookID"])
-//    {  
-//        LoginViewController *loginView = [[LoginViewController alloc] init];
-//        [deckController.centerController presentViewController:loginView animated:YES completion:nil];
-//    }
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     lastTabSelect = currentTabSelect = 0;
+    
+    
     
     return YES;
 }

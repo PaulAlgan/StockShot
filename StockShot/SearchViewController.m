@@ -14,6 +14,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "ImageGridViewController.h"
 #import "User+addition.h"
+#import "Stock+addition.h"
 #import "AppDelegate.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "ProfileViewController.h"
@@ -268,6 +269,15 @@ static NSString *CellClassName = @"ImageViewCell";
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+    Stock *stock = [Stock getStockWithName:[textField.text uppercaseString]];
+    if (stock) {
+        [Datahandler getStockDetail:[textField.text uppercaseString] OnComplete:^(BOOL success, Stock *stockMatch) {
+            if (success) {
+                NSLog(@"Stock: %@",[stockMatch debugDescription]);
+            }
+        }];
+    }
+   
     [searchTextField resignFirstResponder];
     NSLog(@"SEARCH: %@",textField.text);
     

@@ -11,18 +11,18 @@
 #import "NSData+Base64.h"
 #import "AFJSONRequestOperation.h"
 #import "AppDelegate.h"
+#import "Stock+addition.h"
 @interface OverlayViewController ()
 {
     User *me;
     AppDelegate *appdelegate;
     UIImage *sourceImage;
     NSString *sourceMessage;
-    NSDictionary *stockDict;
+    Stock *stock;
 }
 @end
 
 @implementation OverlayViewController
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -38,7 +38,12 @@
     if (self) {
         sourceImage = image;
         sourceMessage = message;
-        [self getStockDetail:@"kk"];
+        
+//        [self getStockDetail:@"kk"];
+        [Datahandler getStockDetail:@"kk" OnComplete:^(BOOL success, Stock *stockTemp)
+        {
+            stock = stockTemp;
+        }];
     }
     return self;
 }
@@ -94,12 +99,12 @@
     {
         [overlayView addSubview:overlay1];
         
-        if (stockDict) {
-            pChangeLabel1.text = [NSString stringWithFormat:@"%.2f%%",[[stockDict objectForKey:@"PersentChange"] floatValue]];
-            lastLabel1.text = [NSString stringWithFormat:@"%.2f",[[stockDict objectForKey:@"Last"] floatValue]];
-            openLabel1.text = [NSString stringWithFormat:@"%.2f",[[stockDict objectForKey:@"Open"] floatValue]];
-            lowLabel1.text = [NSString stringWithFormat:@"%.2f",[[stockDict objectForKey:@"Low"] floatValue]];
-            highLabel1.text = [NSString stringWithFormat:@"%.2f",[[stockDict objectForKey:@"High"] floatValue]];
+        if (stock) {
+            pChangeLabel1.text = [NSString stringWithFormat:@"%.2f%%",[stock.persentChange floatValue]];
+            lastLabel1.text = [NSString stringWithFormat:@"%.2f",[stock.last floatValue]];
+            openLabel1.text = [NSString stringWithFormat:@"%.2f",[stock.open floatValue]];
+            lowLabel1.text = [NSString stringWithFormat:@"%.2f",[stock.low floatValue]];
+            highLabel1.text = [NSString stringWithFormat:@"%.2f",[stock.high floatValue]];
         }
         dateLable1.text = [dateFormatter stringFromDate:date];
         timeLable1.text = [timeFormatter stringFromDate:date];
@@ -109,9 +114,9 @@
     {
         [overlayView addSubview:overlay2];
         
-        if (stockDict) {
-            pChangeLabel2.text = [NSString stringWithFormat:@"%.2f%%",[[stockDict objectForKey:@"PersentChange"] floatValue]];
-            lastLabel2.text = [NSString stringWithFormat:@"%.2f",[[stockDict objectForKey:@"Last"] floatValue]];
+        if (stock) {
+            pChangeLabel2.text = [NSString stringWithFormat:@"%.2f%%",[stock.persentChange floatValue]];
+            lastLabel2.text = [NSString stringWithFormat:@"%.2f",[stock.last floatValue]];
         }
         dateLable2.text = [dateFormatter stringFromDate:date];
         timeLable2.text = [timeFormatter stringFromDate:date];
@@ -206,33 +211,6 @@
         [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
         [operation start];
     }
-    
-}
-
-- (void)getStockDetail:(NSString*)stockName
-{
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://210.1.59.181/stockshot/GetDataStockByName.aspx?symbol=%@",@"kk"]];
-
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    [request setHTTPMethod:@"GET"];
-//    [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
-    [request setTimeoutInterval:20];
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
-                                         {
-                                             NSLog(@"JSON: %@",JSON);
-                                             stockDict = [NSDictionary dictionaryWithDictionary:JSON];
-                                         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
-                                         {
-                                             //                                                 NSLog(@"ERROR CODE: %d",response.statusCode);
-                                             [loadAlert dismissWithClickedButtonIndex:0 animated:YES];
-                                             [Utility alertWithMessage:[NSString stringWithFormat:@"Upload Photo Error: %d",response.statusCode]];
-                                             [self dismissViewControllerAnimated:YES completion:^{
-                                                 [appdelegate backToLastTabbar];
-                                             }];
-                                         }];
-    
-    [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
-    [operation start];
     
 }
 

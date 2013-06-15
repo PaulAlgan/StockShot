@@ -11,6 +11,7 @@
 
 #import "AppDelegate.h"
 #import "User+addition.h"
+#import "Stock+addition.h"
 #import "AFJSONRequestOperation.h"
 #import "ImageViewCell.h"
 #import "CommentViewController.h"
@@ -63,6 +64,8 @@ static NSString *CellClassName = @"ImageViewCell";
         loginView.haveUser = YES;
         [self presentViewController:loginView animated:NO completion:nil];
     }
+    
+    [self getAllStock];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -245,6 +248,16 @@ static NSString *CellClassName = @"ImageViewCell";
 }
 
 #pragma mark - Data
+- (void)getAllStock
+{
+    [Datahandler getAllStockOnComplete:^(bool success, NSArray *allstock) {
+        if (success) {
+//            NSLog(@"AllStock: %@",allstock);
+        }
+    }];
+
+}
+
 - (void)getTimeline:(NSString*)facebookID
 {
 //    NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/get_follow_timeline"];
