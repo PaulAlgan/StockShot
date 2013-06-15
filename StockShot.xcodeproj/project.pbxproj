@@ -183,6 +183,8 @@
 		31A40B4E176B3F2900BF42BD /* Stock+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 31A40B4D176B3F2900BF42BD /* Stock+addition.m */; };
 		31A40B51176B3F9700BF42BD /* Stock.m in Sources */ = {isa = PBXBuildFile; fileRef = 31A40B50176B3F9700BF42BD /* Stock.m */; };
 		31A40B54176C594900BF42BD /* Datahandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 31A40B53176C594900BF42BD /* Datahandler.m */; };
+		31A40B5C176C6D2900BF42BD /* StockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31A40B5A176C6D2700BF42BD /* StockViewController.m */; };
+		31A40B5D176C6D2900BF42BD /* StockViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31A40B5B176C6D2800BF42BD /* StockViewController.xib */; };
 		31A5D4FD175BC78500B98CBC /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 31A5D4FC175BC78500B98CBC /* Default.png */; };
 		31A5D4FF175BC78A00B98CBC /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31A5D4FE175BC78A00B98CBC /* Default@2x.png */; };
 		31A5D503175BD50B00B98CBC /* ImageGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31A5D501175BD50B00B98CBC /* ImageGridViewController.m */; };
@@ -498,6 +500,9 @@
 		31A40B50176B3F9700BF42BD /* Stock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stock.m; sourceTree = "<group>"; };
 		31A40B52176C594900BF42BD /* Datahandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Datahandler.h; sourceTree = "<group>"; };
 		31A40B53176C594900BF42BD /* Datahandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Datahandler.m; sourceTree = "<group>"; };
+		31A40B59176C6D2600BF42BD /* StockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StockViewController.h; sourceTree = "<group>"; };
+		31A40B5A176C6D2700BF42BD /* StockViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StockViewController.m; sourceTree = "<group>"; };
+		31A40B5B176C6D2800BF42BD /* StockViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StockViewController.xib; sourceTree = "<group>"; };
 		31A5D4FC175BC78500B98CBC /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		31A5D4FE175BC78A00B98CBC /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		31A5D500175BD50B00B98CBC /* ImageGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageGridViewController.h; sourceTree = "<group>"; };
@@ -794,6 +799,9 @@
 				319E55C51735774F004D5741 /* ImageViewCell.h */,
 				319E55C61735774F004D5741 /* ImageViewCell.m */,
 				319E55C817357761004D5741 /* ImageViewCell.xib */,
+				31A40B59176C6D2600BF42BD /* StockViewController.h */,
+				31A40B5A176C6D2700BF42BD /* StockViewController.m */,
+				31A40B5B176C6D2800BF42BD /* StockViewController.xib */,
 				319E55C41735771D004D5741 /* Search */,
 				3123201E1765CF3900C4CAD8 /* Feed */,
 				31EFB40017367851005E772A /* Chat */,
@@ -1445,6 +1453,7 @@
 				3120059317666B1000B2EFAB /* ShareSettingViewController.xib in Resources */,
 				3120059517666B1000B2EFAB /* NotificationSettingViewController.xib in Resources */,
 				31AE620D1766892900AD5F56 /* PhotoViewController.xib in Resources */,
+				31A40B5D176C6D2900BF42BD /* StockViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1519,6 +1528,7 @@
 				31A40B4E176B3F2900BF42BD /* Stock+addition.m in Sources */,
 				31A40B51176B3F9700BF42BD /* Stock.m in Sources */,
 				31A40B54176C594900BF42BD /* Datahandler.m in Sources */,
+				31A40B5C176C6D2900BF42BD /* StockViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

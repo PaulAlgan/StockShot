@@ -18,6 +18,7 @@
 #import "AppDelegate.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "ProfileViewController.h"
+#import "StockViewController.h"
 static NSString *CellClassName = @"ImageViewCell";
 
 @interface SearchViewController ()
@@ -271,11 +272,8 @@ static NSString *CellClassName = @"ImageViewCell";
 {
     Stock *stock = [Stock getStockWithName:[textField.text uppercaseString]];
     if (stock) {
-        [Datahandler getStockDetail:[textField.text uppercaseString] OnComplete:^(BOOL success, Stock *stockMatch) {
-            if (success) {
-                NSLog(@"Stock: %@",[stockMatch debugDescription]);
-            }
-        }];
+        StockViewController *stockVC = [[StockViewController alloc] initWithStock:stock];
+        [self.navigationController  pushViewController:stockVC animated:YES];
     }
    
     [searchTextField resignFirstResponder];

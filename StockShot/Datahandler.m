@@ -77,7 +77,6 @@
                                              stock.previousClose = [[stockDetail objectForKey:@"PreviousClose"] stringValue];
                                              stock.symbol = [stockDetail objectForKey:@"Symbol"];
                                              stock.volume = [[stockDetail objectForKey:@"Volume"] stringValue];
-
                                              if (block) {
                                                  block(YES, stock);
                                              }
