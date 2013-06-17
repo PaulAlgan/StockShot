@@ -19,6 +19,7 @@
     IBOutlet UITableView *resultTableView;
     IBOutlet UIButton *userTypeButton;
     IBOutlet UIButton *hashTagTypeButton;
+    IBOutlet UIView *photoGridView;
     
 }
 - (IBAction)touchCancel:(id)sender;

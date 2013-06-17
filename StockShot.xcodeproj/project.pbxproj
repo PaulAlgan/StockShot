@@ -236,6 +236,8 @@
 		31EFB405173678B1005E772A /* ChatRoomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31EFB404173678B1005E772A /* ChatRoomCell.xib */; };
 		31F6F406176F81BE0068A91D /* Photo.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F6F405176F81BE0068A91D /* Photo.m */; };
 		31F6F409176F81D30068A91D /* Photo+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F6F408176F81D30068A91D /* Photo+addition.m */; };
+		31F6F40E176F967D0068A91D /* x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31F6F40C176F967D0068A91D /* x.png */; };
+		31F6F40F176F967D0068A91D /* x@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 31F6F40D176F967D0068A91D /* x@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -575,6 +577,8 @@
 		31F6F405176F81BE0068A91D /* Photo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Photo.m; sourceTree = "<group>"; };
 		31F6F407176F81D30068A91D /* Photo+addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Photo+addition.h"; sourceTree = "<group>"; };
 		31F6F408176F81D30068A91D /* Photo+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Photo+addition.m"; sourceTree = "<group>"; };
+		31F6F40C176F967D0068A91D /* x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = x.png; sourceTree = "<group>"; };
+		31F6F40D176F967D0068A91D /* x@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "x@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -870,6 +874,8 @@
 		3132C175172434880085BB92 /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				31F6F40C176F967D0068A91D /* x.png */,
+				31F6F40D176F967D0068A91D /* x@2x.png */,
 				31CA775C1763E6AB00E93813 /* check_bt.png */,
 				31CA775D1763E6AB00E93813 /* check_bt@2x.png */,
 				314148D5175E0BA200B16B6C /* Profile */,
@@ -1449,6 +1455,8 @@
 				3120059517666B1000B2EFAB /* NotificationSettingViewController.xib in Resources */,
 				31AE620D1766892900AD5F56 /* PhotoViewController.xib in Resources */,
 				31A40B5D176C6D2900BF42BD /* StockViewController.xib in Resources */,
+				31F6F40E176F967D0068A91D /* x.png in Resources */,
+				31F6F40F176F967D0068A91D /* x@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -19,6 +19,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "ProfileViewController.h"
 #import "StockViewController.h"
+#import "Photo+addition.h"
 static NSString *CellClassName = @"ImageViewCell";
 
 @interface SearchViewController ()
@@ -31,18 +32,17 @@ static NSString *CellClassName = @"ImageViewCell";
     User *me;
     AppDelegate *appdelegate;
     BOOL keyboardShow;
-    NSArray *likePhotos;
+    NSArray *randomPhotos;
 }
 @end
 
 @implementation SearchViewController
 
-
-- (id)init{
+- (id)init
+{
     self = [super init];
     if (self) {
         cellLoader = [UINib nibWithNibName:CellClassName bundle:[NSBundle mainBundle]];
-
     }
     return self;
 }
@@ -71,9 +71,7 @@ static NSString *CellClassName = @"ImageViewCell";
                                              selector:@selector(receiveTestNotification:)
                                                  name:@"TestNotification"
                                                object:nil];
-    
     [self loadGridView];
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -81,7 +79,9 @@ static NSString *CellClassName = @"ImageViewCell";
     [super viewWillAppear:YES];
     [Datahandler getRandomPhotosOnComplete:^(BOOL success, NSArray *photos) {
         if (success) {
-            NSLog(@"Photos: %@",photos);
+            NSLog(@"PhotosN %d",photos.count);
+            randomPhotos = photos;
+            [_gmGridView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
         }
     }];
 }
@@ -97,15 +97,15 @@ static NSString *CellClassName = @"ImageViewCell";
     NSLog(@"ReloadPhotos");
 }
 
-
 - (void)loadGridView
 {
     NSInteger spacing = 5;
-    
-    GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(5, 58, 310, 397)];
+    GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(0, 0,
+                                                                          photoGridView.frame.size.width,
+                                                                          photoGridView.frame.size.height)];
     gmGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     gmGridView.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:gmGridView];
+    [photoGridView addSubview:gmGridView];
     _gmGridView = gmGridView;
     _gmGridView.style = GMGridViewStyleSwap;
     _gmGridView.itemSpacing = spacing;
@@ -113,7 +113,7 @@ static NSString *CellClassName = @"ImageViewCell";
     _gmGridView.enableEditOnLongPress = NO;
     _gmGridView.actionDelegate = self;
     _gmGridView.dataSource = self;
-    _gmGridView.mainSuperView = self.view;
+    _gmGridView.mainSuperView = photoGridView;
     [_gmGridView setClipsToBounds:YES];
 }
 
@@ -121,12 +121,30 @@ static NSString *CellClassName = @"ImageViewCell";
 - (IBAction)touchCancel:(id)sender
 {
     [searchTextField resignFirstResponder];
+//    photoGridView.hidden = NO;
+    searchTextField.text = @"";
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    [UIView setAnimationDuration:0.25];
+        
+    CGRect cancelRect = cancelButton.frame;
+    CGRect searchRect = searchView.frame;
+    if (!keyboardShow) {
+        photoGridView.hidden = NO;
+        cancelRect.origin.x = 320;
+        searchRect.size.width = 310;
+
+    }
+    cancelButton.frame = cancelRect;
+    searchView.frame = searchRect;
+    [UIView commitAnimations];
+
 }
 
 - (IBAction)touchContentType:(id)sender
 {
     UIButton *button = (UIButton*)sender;
-    
     if (button == userTypeButton)
     {
         userTypeButton.selected = YES;
@@ -152,6 +170,7 @@ static NSString *CellClassName = @"ImageViewCell";
 
 - (void)keyboardWillShow:(NSNotification *)notification {
     keyboardShow = YES;
+//    photoGridView.hidden = YES;
     [self resizeViewWithOptions:[notification userInfo]];
 }
 
@@ -173,6 +192,9 @@ static NSString *CellClassName = @"ImageViewCell";
     [UIView setAnimationCurve:animationCurve];
     [UIView setAnimationDuration:animationDuration];
     
+    NSLog(@"Animation: %d",animationCurve);
+    NSLog(@"animationDuration: %f",animationDuration);
+    
     CGRect viewFrame = self.view.frame;
     NSLog(@"viewFrame y: %@", NSStringFromCGRect(viewFrame));
     
@@ -188,10 +210,11 @@ static NSString *CellClassName = @"ImageViewCell";
     if (keyboardShow) {
         cancelRect.origin.x = 269;
         searchRect.size.width = 260;
+        photoGridView.hidden = YES;
     }
     else{
-        cancelRect.origin.x = 320;
-        searchRect.size.width = 310;
+//        cancelRect.origin.x = 320;
+//        searchRect.size.width = 310;
     }
     cancelButton.frame = cancelRect;
     searchView.frame = searchRect;
@@ -202,7 +225,7 @@ static NSString *CellClassName = @"ImageViewCell";
 #pragma mark GMGridViewDataSource
 - (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView
 {
-    return likePhotos.count;
+    return randomPhotos.count;
 }
 
 - (CGSize)GMGridView:(GMGridView *)gridView sizeForItemsInInterfaceOrientation:(UIInterfaceOrientation)orientation
@@ -248,11 +271,11 @@ static NSString *CellClassName = @"ImageViewCell";
         imageView = (UIImageView*)[cell.contentView viewWithTag:IMAGE_VIEW_TAG];
     }
     //    [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    if (likePhotos.count > 0)
+    if (randomPhotos.count > 0)
     {
-//        NSDictionary *photo = [userPhotos objectAtIndex:index];
-//        [imageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://stockshot-kk.appspot.com/api/photo?photo_key=%@",[photo objectForKey:@"key"]]]
-//                  placeholderImage:[UIImage imageNamed:@"profileImage.png"]];
+        Photo *photo = [randomPhotos objectAtIndex:index];
+        [imageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://stockshot-kk.appspot.com/api/photo?photo_key=%@",photo.key]]
+                  placeholderImage:[UIImage imageNamed:@"profileImage.png"]];
     }
     return cell;
 }
