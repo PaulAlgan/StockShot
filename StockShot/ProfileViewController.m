@@ -156,16 +156,12 @@
     _gmGridView.centerGrid = NO;
     _gmGridView.enableEditOnLongPress = NO;
     _gmGridView.actionDelegate = self;
-    _gmGridView.sortingDelegate = self;
-    _gmGridView.transformDelegate = self;
     _gmGridView.dataSource = self;
     _gmGridView.mainSuperView = contentView;
     [_gmGridView setClipsToBounds:YES];
 }
 
 #pragma mark GMGridViewDataSource
-//////////////////////////////////////////////////////////////
-
 - (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView
 {
     return userPhotos.count;
@@ -225,6 +221,10 @@
     return cell;
 }
 
+- (BOOL)GMGridView:(GMGridView *)gridView shouldAllowShakingBehaviorWhenMovingCell:(GMGridViewCell *)view atIndex:(NSInteger)index
+{
+    return NO;
+}
 
 - (BOOL)GMGridView:(GMGridView *)gridView canDeleteItemAtIndex:(NSInteger)index
 {
@@ -249,7 +249,6 @@
                                              NSDictionary *dictionary = [NSDictionary dictionaryWithDictionary:JSON];
 //                                             NSLog(@"USER RESULT: %@",JSON);
                                              [self dismissViewControllerAnimated:YES completion:nil];
-//                                             User *user = [User me];
                                              
                                              self.user.username = [dictionary objectForKey:@"username"];
                                              self.user.name = [dictionary objectForKey:@"name"];
@@ -273,22 +272,13 @@
                                              self.user.photoLikeCount =
                                              [NSNumber numberWithLong:[[dictionary objectForKey:@"photo_like_count"] longValue]];
                                              [appdelegate saveContext];
-//                                             self.user = user;
                                              NSArray *photos = [dictionary objectForKey:@"photo"];
 //                                             NSLog(@"photo: %@",photos);
                                              
-                                             if (!userPhotos) {
-                                                 userPhotos = [[NSMutableArray alloc] init];
-                                             }
-                                             else{
-                                                 [userPhotos removeAllObjects];
-                                             }
-                                             for (int i =0 ; i<photos.count; i++)
-                                             {
-                                                 NSDictionary *dict = [photos objectAtIndex:i];
-                                                 [userPhotos insertObject:dict atIndex:0];
-                                             }
-//                                             userPhotos = photos;
+                                             if (!userPhotos) userPhotos = [[NSMutableArray alloc] init];
+                                             else [userPhotos removeAllObjects];
+
+                                             userPhotos = [NSArray arrayWithArray:photos];
                                              [_gmGridView reloadData];
                                              [self reloadUserData];
                                              [self dismissViewControllerAnimated:YES completion:nil];

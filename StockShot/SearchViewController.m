@@ -31,6 +31,7 @@ static NSString *CellClassName = @"ImageViewCell";
     User *me;
     AppDelegate *appdelegate;
     BOOL keyboardShow;
+    NSArray *likePhotos;
 }
 @end
 
@@ -71,7 +72,18 @@ static NSString *CellClassName = @"ImageViewCell";
                                                  name:@"TestNotification"
                                                object:nil];
     
-//    - 51
+    [self loadGridView];
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    [Datahandler getRandomPhotosOnComplete:^(BOOL success, NSArray *photos) {
+        if (success) {
+            NSLog(@"Photos: %@",photos);
+        }
+    }];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -88,7 +100,21 @@ static NSString *CellClassName = @"ImageViewCell";
 
 - (void)loadGridView
 {
+    NSInteger spacing = 5;
     
+    GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(5, 58, 310, 397)];
+    gmGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    gmGridView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:gmGridView];
+    _gmGridView = gmGridView;
+    _gmGridView.style = GMGridViewStyleSwap;
+    _gmGridView.itemSpacing = spacing;
+    _gmGridView.centerGrid = NO;
+    _gmGridView.enableEditOnLongPress = NO;
+    _gmGridView.actionDelegate = self;
+    _gmGridView.dataSource = self;
+    _gmGridView.mainSuperView = self.view;
+    [_gmGridView setClipsToBounds:YES];
 }
 
 #pragma mark - IBAction
@@ -174,7 +200,69 @@ static NSString *CellClassName = @"ImageViewCell";
 }
 
 #pragma mark GMGridViewDataSource
-//////////////////////////////////////////////////////////////
+- (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView
+{
+    return likePhotos.count;
+}
+
+- (CGSize)GMGridView:(GMGridView *)gridView sizeForItemsInInterfaceOrientation:(UIInterfaceOrientation)orientation
+{
+    return CGSizeMake(70, 70);
+}
+#pragma mark GMGridViewActionDelegate
+
+- (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
+{
+    NSLog(@"Did tap at index %d", position);
+//    PhotoViewController *photoViewController = [[PhotoViewController alloc] init];
+//    photoViewController.photo = [userPhotos objectAtIndex:position];
+//    [self.navigationController pushViewController:photoViewController animated:YES];
+}
+
+- (void)GMGridViewDidTapOnEmptySpace:(GMGridView *)gridView
+{
+    NSLog(@"Tap on empty space");
+}
+
+#define IMAGE_VIEW_TAG 101
+
+- (GMGridViewCell *)GMGridView:(GMGridView *)gridView cellForItemAtIndex:(NSInteger)index
+{
+    CGSize size = [self GMGridView:gridView sizeForItemsInInterfaceOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
+    
+    GMGridViewCell *cell = [gridView dequeueReusableCell];
+    UIImageView *imageView;
+    
+    if (!cell)
+    {
+        cell = [[GMGridViewCell alloc] init];
+        
+        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+        imageView.tag = IMAGE_VIEW_TAG;
+        imageView.backgroundColor = [UIColor redColor];
+        imageView.layer.masksToBounds = NO;
+        cell.contentView = imageView;
+    }
+    else
+    {
+        imageView = (UIImageView*)[cell.contentView viewWithTag:IMAGE_VIEW_TAG];
+    }
+    //    [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    if (likePhotos.count > 0)
+    {
+//        NSDictionary *photo = [userPhotos objectAtIndex:index];
+//        [imageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://stockshot-kk.appspot.com/api/photo?photo_key=%@",[photo objectForKey:@"key"]]]
+//                  placeholderImage:[UIImage imageNamed:@"profileImage.png"]];
+    }
+    return cell;
+}
+
+
+- (BOOL)GMGridView:(GMGridView *)gridView canDeleteItemAtIndex:(NSInteger)index
+{
+    return NO; //index % 2 == 0;
+}
+
 
 - (void)didReceiveMemoryWarning
 {

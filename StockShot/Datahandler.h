@@ -14,4 +14,5 @@
 }
 + (void)getAllStockOnComplete:(void (^)(bool success, NSArray *allstock))block;
 + (void)getStockDetail:(NSString*)stockName OnComplete:(void (^)(BOOL success, Stock *stock))block;
++ (void)getRandomPhotosOnComplete:(void (^)(BOOL success, NSArray *photos))block;
 @end

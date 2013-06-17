@@ -45,6 +45,7 @@
     
     if (matches.count > 1)
     {
+        NSLog(@"Stock Error!");
         [Utility alertWithMessage:@"StockError"];
     }
     else if (matches.count == 0)

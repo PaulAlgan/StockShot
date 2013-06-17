@@ -8,7 +8,6 @@
 
 #import "SuggestFriendViewController.h"
 #import "AFJSONRequestOperation.h"
-#import "Player+addition.h"
 
 #import "AppDelegate.h"
 @interface SuggestFriendViewController ()
@@ -81,8 +80,8 @@
     }
     
     if (suggestPlayers.count > 0) {
-        Player *player = [suggestPlayers objectAtIndex:indexPath.row];
-        cell.textLabel.text = player.name;
+//        Player *player = [suggestPlayers objectAtIndex:indexPath.row];
+//        cell.textLabel.text = player.name;
     }
     return cell;
 }
@@ -122,33 +121,33 @@
                                              }
                                              
                                              for (int i=0; i<players.count; i++) {
-                                                 NSDictionary *dict = [players objectAtIndex:i];
-                                                 Player *player = [Player createPlayerWithFacebookID:[dict objectForKey:@"facebook_id"]
-                                                                                                 InManagedObjectContext:appdelegate.managedObjectContext];
-                                                 
-                                                 player.username = [dict objectForKey:@"username"];
-                                                 player.name = [dict objectForKey:@"name"];
-                                                 player.firstName = [dict objectForKey:@"first_name"];
-                                                 player.lastName = [dict objectForKey:@"last_name"];
-                                                 player.facebookID = [dict objectForKey:@"facebook_id"];
-                                                 player.email = [dict objectForKey:@"email"];
-                                                 player.deviceToken = [dict objectForKey:@"device_token"];
-                                                 player.locale = [dict objectForKey:@"locale"];
-                                                 
-                                                 player.notiComment = [dict objectForKey:@"notification_comment"];
-                                                 player.notiContact = [dict objectForKey:@"notification_contact"];
-                                                 player.notiLike = [dict objectForKey:@"notification_like"];
-                                                 
-                                                 player.followerCount =
-                                                 [NSNumber numberWithLong:[[dict objectForKey:@"follower_count"] longValue]];
-                                                 player.followingCount =
-                                                 [NSNumber numberWithLong:[[dict objectForKey:@"following_count"] longValue]];
-                                                 player.photoCount =
-                                                 [NSNumber numberWithLong:[[dict objectForKey:@"photo_count"] longValue]];
-                                                 player.photoLikeCount =
-                                                 [NSNumber numberWithLong:[[dict objectForKey:@"photo_like_count"] longValue]];
-                                                 
-                                                 [suggestPlayers addObject:player];
+//                                                 NSDictionary *dict = [players objectAtIndex:i];
+//                                                 Player *player = [Player createPlayerWithFacebookID:[dict objectForKey:@"facebook_id"]
+//                                                                                                 InManagedObjectContext:appdelegate.managedObjectContext];
+//                                                 
+//                                                 player.username = [dict objectForKey:@"username"];
+//                                                 player.name = [dict objectForKey:@"name"];
+//                                                 player.firstName = [dict objectForKey:@"first_name"];
+//                                                 player.lastName = [dict objectForKey:@"last_name"];
+//                                                 player.facebookID = [dict objectForKey:@"facebook_id"];
+//                                                 player.email = [dict objectForKey:@"email"];
+//                                                 player.deviceToken = [dict objectForKey:@"device_token"];
+//                                                 player.locale = [dict objectForKey:@"locale"];
+//                                                 
+//                                                 player.notiComment = [dict objectForKey:@"notification_comment"];
+//                                                 player.notiContact = [dict objectForKey:@"notification_contact"];
+//                                                 player.notiLike = [dict objectForKey:@"notification_like"];
+//                                                 
+//                                                 player.followerCount =
+//                                                 [NSNumber numberWithLong:[[dict objectForKey:@"follower_count"] longValue]];
+//                                                 player.followingCount =
+//                                                 [NSNumber numberWithLong:[[dict objectForKey:@"following_count"] longValue]];
+//                                                 player.photoCount =
+//                                                 [NSNumber numberWithLong:[[dict objectForKey:@"photo_count"] longValue]];
+//                                                 player.photoLikeCount =
+//                                                 [NSNumber numberWithLong:[[dict objectForKey:@"photo_like_count"] longValue]];
+//                                                 
+//                                                 [suggestPlayers addObject:player];
                                              }
                                              [appdelegate saveContext];
                                              [contentTableView reloadData];
