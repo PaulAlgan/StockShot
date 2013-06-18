@@ -8,6 +8,7 @@
 
 #import "LoginViewController.h"
 #import "User+addition.h"
+#import "Stock+addition.h"
 #import "AppDelegate.h"
 #import "AFJSONRequestOperation.h"
 
@@ -141,6 +142,7 @@
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
                                          {
                                              NSDictionary *dictionary = [NSDictionary dictionaryWithDictionary:JSON];
+                                             NSArray *watchList = [dictionary objectForKey:@"wish_list"];
                                              [self dismissViewControllerAnimated:YES completion:nil];
                                              User *user = [User me];
 
@@ -165,6 +167,14 @@
                                              [NSNumber numberWithLong:[[dictionary objectForKey:@"photo_count"] longValue]];
                                              user.photoLikeCount =
                                              [NSNumber numberWithLong:[[dictionary objectForKey:@"photo_like_count"] longValue]];
+                                             
+                                             for (int i=0; i<watchList.count; i++)
+                                             {
+                                                 NSString *symbol = [watchList objectAtIndex:i];
+                                                 NSLog(@"Watch: %@",symbol);
+                                                 Stock *stock = [Stock stockWithName:symbol];
+                                                 [user addWatchObject:stock];
+                                             }
                                              
                                              [appdelegate saveContext];
                                              NSLog(@"UPDATE USER DONE!");

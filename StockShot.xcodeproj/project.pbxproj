@@ -18,7 +18,6 @@
 		310DEAA117535B7000FE62C7 /* profileImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 310DEA9F17535B7000FE62C7 /* profileImage.png */; };
 		310DEAA217535B7000FE62C7 /* profileImage@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 310DEAA017535B7000FE62C7 /* profileImage@2x.png */; };
 		31169F6B1754841000AB9E74 /* ChatMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 31169F6A1754841000AB9E74 /* ChatMessage.m */; };
-		31169F6E1754842300AB9E74 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 31169F6D1754842300AB9E74 /* User.m */; };
 		3120059217666B1000B2EFAB /* ShareSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3120058D17666B1000B2EFAB /* ShareSettingViewController.m */; };
 		3120059317666B1000B2EFAB /* ShareSettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3120058E17666B1000B2EFAB /* ShareSettingViewController.xib */; };
 		3120059417666B1000B2EFAB /* NotificationSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3120059017666B1000B2EFAB /* NotificationSettingViewController.m */; };
@@ -128,6 +127,8 @@
 		3146DDF81726C06300D275C7 /* PrivacyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3146DDF61726C06200D275C7 /* PrivacyViewController.xib */; };
 		3146DDFC1726C06F00D275C7 /* TermsOfUseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3146DDFA1726C06F00D275C7 /* TermsOfUseViewController.m */; };
 		3146DDFD1726C06F00D275C7 /* TermsOfUseViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3146DDFB1726C06F00D275C7 /* TermsOfUseViewController.xib */; };
+		314F88FD1770CC9500F57AFA /* Stock.m in Sources */ = {isa = PBXBuildFile; fileRef = 314F88FC1770CC9500F57AFA /* Stock.m */; };
+		314F89031770CCEF00F57AFA /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 314F89021770CCEF00F57AFA /* User.m */; };
 		314FD4431734289F00F99FFA /* SearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 314FD4411734289F00F99FFA /* SearchViewController.m */; };
 		314FD4441734289F00F99FFA /* SearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 314FD4421734289F00F99FFA /* SearchViewController.xib */; };
 		3154FF1E175B6145001C819E /* EditProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3154FF1C175B6145001C819E /* EditProfileViewController.m */; };
@@ -178,7 +179,6 @@
 		319E55C71735774F004D5741 /* ImageViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 319E55C61735774F004D5741 /* ImageViewCell.m */; };
 		319E55C917357761004D5741 /* ImageViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 319E55C817357761004D5741 /* ImageViewCell.xib */; };
 		31A40B4E176B3F2900BF42BD /* Stock+addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 31A40B4D176B3F2900BF42BD /* Stock+addition.m */; };
-		31A40B51176B3F9700BF42BD /* Stock.m in Sources */ = {isa = PBXBuildFile; fileRef = 31A40B50176B3F9700BF42BD /* Stock.m */; };
 		31A40B54176C594900BF42BD /* Datahandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 31A40B53176C594900BF42BD /* Datahandler.m */; };
 		31A40B5C176C6D2900BF42BD /* StockViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 31A40B5A176C6D2700BF42BD /* StockViewController.m */; };
 		31A40B5D176C6D2900BF42BD /* StockViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 31A40B5B176C6D2800BF42BD /* StockViewController.xib */; };
@@ -292,8 +292,6 @@
 		310DEAA017535B7000FE62C7 /* profileImage@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "profileImage@2x.png"; sourceTree = "<group>"; };
 		31169F691754841000AB9E74 /* ChatMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatMessage.h; sourceTree = "<group>"; };
 		31169F6A1754841000AB9E74 /* ChatMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatMessage.m; sourceTree = "<group>"; };
-		31169F6C1754842300AB9E74 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
-		31169F6D1754842300AB9E74 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		3120058C17666B1000B2EFAB /* ShareSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareSettingViewController.h; sourceTree = "<group>"; };
 		3120058D17666B1000B2EFAB /* ShareSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareSettingViewController.m; sourceTree = "<group>"; };
 		3120058E17666B1000B2EFAB /* ShareSettingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShareSettingViewController.xib; sourceTree = "<group>"; };
@@ -434,6 +432,10 @@
 		3146DDF91726C06F00D275C7 /* TermsOfUseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TermsOfUseViewController.h; sourceTree = "<group>"; };
 		3146DDFA1726C06F00D275C7 /* TermsOfUseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TermsOfUseViewController.m; sourceTree = "<group>"; };
 		3146DDFB1726C06F00D275C7 /* TermsOfUseViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TermsOfUseViewController.xib; sourceTree = "<group>"; };
+		314F88FB1770CC9500F57AFA /* Stock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stock.h; sourceTree = "<group>"; };
+		314F88FC1770CC9500F57AFA /* Stock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stock.m; sourceTree = "<group>"; };
+		314F89011770CCEF00F57AFA /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		314F89021770CCEF00F57AFA /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		314FD4401734289F00F99FFA /* SearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchViewController.h; sourceTree = "<group>"; };
 		314FD4411734289F00F99FFA /* SearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchViewController.m; sourceTree = "<group>"; };
 		314FD4421734289F00F99FFA /* SearchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchViewController.xib; sourceTree = "<group>"; };
@@ -491,8 +493,6 @@
 		319E55C817357761004D5741 /* ImageViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImageViewCell.xib; sourceTree = "<group>"; };
 		31A40B4C176B3F2900BF42BD /* Stock+addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Stock+addition.h"; sourceTree = "<group>"; };
 		31A40B4D176B3F2900BF42BD /* Stock+addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Stock+addition.m"; sourceTree = "<group>"; };
-		31A40B4F176B3F9700BF42BD /* Stock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Stock.h; sourceTree = "<group>"; };
-		31A40B50176B3F9700BF42BD /* Stock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Stock.m; sourceTree = "<group>"; };
 		31A40B52176C594900BF42BD /* Datahandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Datahandler.h; sourceTree = "<group>"; };
 		31A40B53176C594900BF42BD /* Datahandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Datahandler.m; sourceTree = "<group>"; };
 		31A40B59176C6D2600BF42BD /* StockViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StockViewController.h; sourceTree = "<group>"; };
@@ -1135,16 +1135,16 @@
 				317AEDD5174D2694006D7715 /* Conversation.m */,
 				31169F691754841000AB9E74 /* ChatMessage.h */,
 				31169F6A1754841000AB9E74 /* ChatMessage.m */,
-				31169F6C1754842300AB9E74 /* User.h */,
-				31169F6D1754842300AB9E74 /* User.m */,
 				31A40B4C176B3F2900BF42BD /* Stock+addition.h */,
 				31A40B4D176B3F2900BF42BD /* Stock+addition.m */,
-				31A40B4F176B3F9700BF42BD /* Stock.h */,
-				31A40B50176B3F9700BF42BD /* Stock.m */,
 				31F6F404176F81BE0068A91D /* Photo.h */,
 				31F6F405176F81BE0068A91D /* Photo.m */,
 				31F6F407176F81D30068A91D /* Photo+addition.h */,
 				31F6F408176F81D30068A91D /* Photo+addition.m */,
+				314F88FB1770CC9500F57AFA /* Stock.h */,
+				314F88FC1770CC9500F57AFA /* Stock.m */,
+				314F89011770CCEF00F57AFA /* User.h */,
+				314F89021770CCEF00F57AFA /* User.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1512,7 +1512,6 @@
 				31E9BFEE174ECB370010E5A0 /* ConversationViewController.m in Sources */,
 				31E9BFF4174ECFAF0010E5A0 /* MessageCell.m in Sources */,
 				31169F6B1754841000AB9E74 /* ChatMessage.m in Sources */,
-				31169F6E1754842300AB9E74 /* User.m in Sources */,
 				31D6CC021754B4D700B61CB0 /* NSData+Base64.m in Sources */,
 				31DA22861756808E00270C10 /* OptionsViewController.m in Sources */,
 				31DA228E1756AC9700270C10 /* TTTAttributedLabel.m in Sources */,
@@ -1526,11 +1525,12 @@
 				3120059417666B1000B2EFAB /* NotificationSettingViewController.m in Sources */,
 				31AE620C1766892900AD5F56 /* PhotoViewController.m in Sources */,
 				31A40B4E176B3F2900BF42BD /* Stock+addition.m in Sources */,
-				31A40B51176B3F9700BF42BD /* Stock.m in Sources */,
 				31A40B54176C594900BF42BD /* Datahandler.m in Sources */,
 				31A40B5C176C6D2900BF42BD /* StockViewController.m in Sources */,
 				31F6F406176F81BE0068A91D /* Photo.m in Sources */,
 				31F6F409176F81D30068A91D /* Photo+addition.m in Sources */,
+				314F88FD1770CC9500F57AFA /* Stock.m in Sources */,
+				314F89031770CCEF00F57AFA /* User.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,9 +8,10 @@
 
 #import "StockViewController.h"
 #import "Stock+addition.h"
+#import "User+addition.h"
 @interface StockViewController ()
 {
-
+    User *me;
 }
 @end
 
@@ -40,7 +41,7 @@
     [super viewDidLoad];
     self.navigationItem.leftBarButtonItem = [Utility backButton:self];
     symbolLabel.text = self.stock.symbol;
-    
+    me = [User me];
     
     [Datahandler getStockDetail:[self.stock.symbol uppercaseString] OnComplete:^(BOOL success, Stock *stockMatch) {
         if (success) {
@@ -60,9 +61,78 @@
         }
     }];
 
-    
-    //    timeLastUpdatLabel.text = self.stock.symbol;
-//    dateLastUpdatLabel.text = self.stock.symbol;
+    if (me.facebookID) {
+        if ([me.watch containsObject:self.stock]) {
+            [self setWatch:YES];
+        }
+    }
+
+}
+
+- (void)setWatch:(BOOL)watched
+{
+    if (watched) {
+        addWatchListButton.selected = YES;
+        addWatchListButton.backgroundColor = [UIColor colorWithRed:33.0/255.0 green:107.0/255.0 blue:166.0/255.0 alpha:1];
+    }
+    else
+    {
+        addWatchListButton.selected = NO;
+        addWatchListButton.backgroundColor = [UIColor colorWithRed:63.0/255.0 green:80.0/255.0 blue:88.0/255.0 alpha:1];
+    }
+}
+
+#pragma mark - IBAction
+- (IBAction)touchAddWatchList:(id)sender
+{
+    me = [User me];
+    if (me.facebookID)
+    {
+        if (addWatchListButton.selected)
+        {
+            [Datahandler removeWatchListWithSymbol:self.stock.symbol
+                                            userID:me.facebookID
+                                        OnComplete:^(BOOL success, NSString *result) {
+                                            if (success) {
+                                                if ([result isEqualToString:@"success"])
+                                                {
+                                                    [Utility alertWithMessage:@"Remove from Watch List Done."];
+                                                    [self setWatch:NO];
+                                                }
+                                                else
+                                                {
+                                                    [Utility alertWithMessage:@"Remove from Watch List Fail."];
+                                                }
+                                            }
+
+                                        }];
+
+        }
+        else
+        {
+            [Datahandler addWatchListWithSymbol:self.stock.symbol
+                                         userID:me.facebookID
+                                     OnComplete:^(BOOL success, NSString *result) {
+                                         if (success) {
+                                             if ([result isEqualToString:@"success"])
+                                             {
+                                                 [Utility alertWithMessage:@"Add to Watch List Done."];
+                                                 [self setWatch:YES];
+                                             }
+                                             else
+                                             {
+                                                 [Utility alertWithMessage:@"Add to Watch List Fail."];
+                                             }
+                                         }
+                                     }];
+
+        }
+        
+    }
+    else
+    {
+        [Utility alertWithMessage:@"Please Login"];
+    }
 
 }
 

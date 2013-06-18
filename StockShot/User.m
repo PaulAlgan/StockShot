@@ -2,11 +2,13 @@
 //  User.m
 //  StockShot
 //
-//  Created by Phatthana Tongon on 5/28/56 BE.
+//  Created by Phatthana Tongon on 6/19/56 BE.
 //  Copyright (c) 2556 Phatthana Tongon. All rights reserved.
 //
 
 #import "User.h"
+#import "Photo.h"
+#import "Stock.h"
 
 
 @implementation User
@@ -19,6 +21,7 @@
 @dynamic followingCount;
 @dynamic lastName;
 @dynamic locale;
+@dynamic me;
 @dynamic name;
 @dynamic notiComment;
 @dynamic notiContact;
@@ -26,7 +29,7 @@
 @dynamic photoCount;
 @dynamic photoLikeCount;
 @dynamic username;
-@dynamic me;
 @dynamic have;
+@dynamic watch;
 
 @end

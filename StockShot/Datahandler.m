@@ -128,5 +128,58 @@
     
 }
 
++ (void)addWatchListWithSymbol:(NSString*)symbol userID:(NSString*)userID OnComplete:(void (^)(BOOL success, NSString *result))block
+{
+    NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/add_wish_list"];
+    NSString *params = [NSString stringWithFormat:@"facebook_id=%@&wish_item=%@",userID,symbol];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setTimeoutInterval:20];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
+                                         {
+                                            NSString *result = [JSON objectForKey:@"result"];
+                                            if (block) {
+                                                 block(YES, result);
+                                             }
+                                         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+                                         {
+                                             if (block) {
+                                                 block(NO, nil);
+                                             }
+                                         }];
+    
+    [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
+    [operation start];
+    
+}
+
++ (void)removeWatchListWithSymbol:(NSString*)symbol userID:(NSString*)userID OnComplete:(void (^)(BOOL success, NSString *result))block
+{
+    NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/remove_wish_list"];
+    NSString *params = [NSString stringWithFormat:@"facebook_id=%@&wish_item=%@",userID,symbol];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setTimeoutInterval:20];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
+                                         {
+                                             NSString *result = [JSON objectForKey:@"result"];
+                                             if (block) {
+                                                 block(YES, result);
+                                             }
+                                         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+                                         {
+                                             if (block) {
+                                                 block(NO, nil);
+                                             }
+                                         }];
+    
+    [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
+    [operation start];
+    
+}
 
 @end

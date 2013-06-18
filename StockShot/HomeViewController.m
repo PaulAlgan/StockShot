@@ -280,7 +280,7 @@ static NSString *CellClassName = @"ImageViewCell";
                                              for (int i=0; i<photos.count; i++){
                                                  [resultImages insertObject:[photos objectAtIndex:i] atIndex:0];
                                              }
-                                             if (resultImages.count > 0) NSLog(@"PHOTO: %@",[resultImages objectAtIndex:0]);
+//                                             if (resultImages.count > 0) NSLog(@"PHOTO: %@",[resultImages objectAtIndex:0]);
                                              for (int i=0; i<[resultImages count]; i++)
                                              {
                                                  NSDictionary *player = [[resultImages objectAtIndex:i] objectForKey:@"action_player"];

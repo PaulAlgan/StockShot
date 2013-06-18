@@ -2,13 +2,14 @@
 //  Stock.h
 //  StockShot
 //
-//  Created by Phatthana Tongon on 6/14/56 BE.
+//  Created by Phatthana Tongon on 6/19/56 BE.
 //  Copyright (c) 2556 Phatthana Tongon. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+@class User;
 
 @interface Stock : NSManagedObject
 
@@ -24,5 +25,6 @@
 @property (nonatomic, retain) NSString * previousClose;
 @property (nonatomic, retain) NSString * symbol;
 @property (nonatomic, retain) NSString * volume;
+@property (nonatomic, retain) User *watchBy;
 
 @end

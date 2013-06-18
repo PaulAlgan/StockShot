@@ -15,6 +15,7 @@
     AppDelegate *appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     Stock *stock = nil;
     
+    name = [name uppercaseString];
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Stock"];
     request.predicate = [NSPredicate predicateWithFormat:@"symbol = %@",name];
     
@@ -36,7 +37,8 @@
 {
     AppDelegate *appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     Stock *stock = nil;
-    
+ 
+    name = [name uppercaseString];
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Stock"];
     request.predicate = [NSPredicate predicateWithFormat:@"symbol = %@",name];
     

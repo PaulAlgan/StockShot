@@ -2,11 +2,12 @@
 //  Stock.m
 //  StockShot
 //
-//  Created by Phatthana Tongon on 6/14/56 BE.
+//  Created by Phatthana Tongon on 6/19/56 BE.
 //  Copyright (c) 2556 Phatthana Tongon. All rights reserved.
 //
 
 #import "Stock.h"
+#import "User.h"
 
 
 @implementation Stock
@@ -23,5 +24,6 @@
 @dynamic previousClose;
 @dynamic symbol;
 @dynamic volume;
+@dynamic watchBy;
 
 @end

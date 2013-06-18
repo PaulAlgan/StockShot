@@ -25,7 +25,12 @@
     IBOutlet UILabel *dividendLabel;
     IBOutlet UILabel *timeLastUpdatLabel;
     IBOutlet UILabel *dateLastUpdatLabel;
+
+    IBOutlet UIButton *addWatchListButton;
+    IBOutlet UIButton *cameraButton;
 }
 - (id)initWithStock:(Stock*)stockTemp;
+- (IBAction)touchAddWatchList:(id)sender;
+
 @property (nonatomic,retain) Stock *stock;
 @end
