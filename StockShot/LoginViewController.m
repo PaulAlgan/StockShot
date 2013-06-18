@@ -170,9 +170,9 @@
                                              
                                              for (int i=0; i<watchList.count; i++)
                                              {
-                                                 NSString *symbol = [watchList objectAtIndex:i];
-                                                 NSLog(@"Watch: %@",symbol);
+                                                 NSString *symbol = [[watchList objectAtIndex:i] uppercaseString];
                                                  Stock *stock = [Stock stockWithName:symbol];
+//                                                 NSLog(@"Watch[%@]: %@",stock.symbol,stock.debugDescription);
                                                  [user addWatchObject:stock];
                                              }
                                              

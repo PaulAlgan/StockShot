@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		310A25FD1770D72300843B56 /* WatchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 310A25FC1770D72300843B56 /* WatchCell.m */; };
+		310A25FF1770D72F00843B56 /* WatchCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 310A25FE1770D72F00843B56 /* WatchCell.xib */; };
 		310C90D0175E78BE00F0574F /* CommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 310C90CE175E78BE00F0574F /* CommentViewController.m */; };
 		310C90D1175E78BE00F0574F /* CommentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 310C90CF175E78BE00F0574F /* CommentViewController.xib */; };
 		310C90D8175E9C2400F0574F /* shareEmail_bt.png in Resources */ = {isa = PBXBuildFile; fileRef = 310C90D2175E9C2400F0574F /* shareEmail_bt.png */; };
@@ -279,6 +281,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		310A25FB1770D72300843B56 /* WatchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchCell.h; sourceTree = "<group>"; };
+		310A25FC1770D72300843B56 /* WatchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchCell.m; sourceTree = "<group>"; };
+		310A25FE1770D72F00843B56 /* WatchCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WatchCell.xib; sourceTree = "<group>"; };
 		310C90CD175E78BE00F0574F /* CommentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentViewController.h; sourceTree = "<group>"; };
 		310C90CE175E78BE00F0574F /* CommentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentViewController.m; sourceTree = "<group>"; };
 		310C90CF175E78BE00F0574F /* CommentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentViewController.xib; sourceTree = "<group>"; };
@@ -616,6 +621,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		310A25F81770D6FE00843B56 /* WatchList */ = {
+			isa = PBXGroup;
+			children = (
+				3146DDD11726BADA00D275C7 /* WatchListViewController.h */,
+				3146DDD21726BADA00D275C7 /* WatchListViewController.m */,
+				3146DDD31726BADA00D275C7 /* WatchListViewController.xib */,
+				310A25FB1770D72300843B56 /* WatchCell.h */,
+				310A25FC1770D72300843B56 /* WatchCell.m */,
+				310A25FE1770D72F00843B56 /* WatchCell.xib */,
+			);
+			name = WatchList;
+			sourceTree = "<group>";
+		};
 		310C90C9175E70BB00F0574F /* NSData+Base64 */ = {
 			isa = PBXGroup;
 			children = (
@@ -806,9 +824,7 @@
 				319E55C41735771D004D5741 /* Search */,
 				3123201E1765CF3900C4CAD8 /* Feed */,
 				31EFB40017367851005E772A /* Chat */,
-				3146DDD11726BADA00D275C7 /* WatchListViewController.h */,
-				3146DDD21726BADA00D275C7 /* WatchListViewController.m */,
-				3146DDD31726BADA00D275C7 /* WatchListViewController.xib */,
+				310A25F81770D6FE00843B56 /* WatchList */,
 				314403811727FDE10095F9CD /* Find Friend */,
 				3146DDDB1726BDA500D275C7 /* LikedViewController.h */,
 				3146DDDC1726BDA500D275C7 /* LikedViewController.m */,
@@ -1457,6 +1473,7 @@
 				31A40B5D176C6D2900BF42BD /* StockViewController.xib in Resources */,
 				31F6F40E176F967D0068A91D /* x.png in Resources */,
 				31F6F40F176F967D0068A91D /* x@2x.png in Resources */,
+				310A25FF1770D72F00843B56 /* WatchCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1531,6 +1548,7 @@
 				31F6F409176F81D30068A91D /* Photo+addition.m in Sources */,
 				314F88FD1770CC9500F57AFA /* Stock.m in Sources */,
 				314F89031770CCEF00F57AFA /* User.m in Sources */,
+				310A25FD1770D72300843B56 /* WatchCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

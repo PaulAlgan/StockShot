@@ -58,6 +58,8 @@
 
 + (void)getStockDetail:(NSString*)stockName OnComplete:(void (^)(BOOL success, Stock *stock))block
 {
+    AppDelegate *appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://210.1.59.181/stockshot/GetDataStockByName.aspx?symbol=%@",stockName]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"GET"];
@@ -78,6 +80,7 @@
                                              stock.previousClose = [[stockDetail objectForKey:@"PreviousClose"] stringValue];
 //                                             stock.symbol = [stockDetail objectForKey:@"Symbol"];
                                              stock.volume = [[stockDetail objectForKey:@"Volume"] stringValue];
+                                             [appdelegate saveContext];
                                              if (block) {
                                                  block(YES, stock);
                                              }
@@ -180,6 +183,70 @@
     [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
     [operation start];
     
+}
+
++ (void)requestUserInfo:(NSString*)userID OnComplete:(void (^)(BOOL success, User *user))block
+{
+    AppDelegate *appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
+    NSString *requestType = [[NSString alloc] init];
+    requestType = @"request_info";
+    
+    NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/player"];
+    NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&request_type=%@",userID,requestType];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setTimeoutInterval:7];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
+                                         {
+                                             NSDictionary *dictionary = [NSDictionary dictionaryWithDictionary:JSON];
+                                             NSArray *watchList = [dictionary objectForKey:@"wish_list"];
+                                             
+                                             User *user = [User userWithFacebookID:userID InManagedObjectContext:appdelegate.managedObjectContext];
+                                             user.username = [dictionary objectForKey:@"username"];
+                                             user.name = [dictionary objectForKey:@"name"];
+                                             user.firstName = [dictionary objectForKey:@"first_name"];
+                                             user.lastName = [dictionary objectForKey:@"last_name"];
+                                             user.facebookID = [dictionary objectForKey:@"facebook_id"];
+                                             user.email = [dictionary objectForKey:@"email"];
+                                             user.deviceToken = [dictionary objectForKey:@"device_token"];
+                                             user.locale = [dictionary objectForKey:@"locale"];
+                                             
+                                             user.notiComment = [dictionary objectForKey:@"notification_comment"];
+                                             user.notiContact = [dictionary objectForKey:@"notification_contact"];
+                                             user.notiLike = [dictionary objectForKey:@"notification_like"];
+                                             
+                                             user.followerCount =
+                                             [NSNumber numberWithLong:[[dictionary objectForKey:@"follower_count"] longValue]];
+                                             user.followingCount =
+                                             [NSNumber numberWithLong:[[dictionary objectForKey:@"following_count"] longValue]];
+                                             user.photoCount =
+                                             [NSNumber numberWithLong:[[dictionary objectForKey:@"photo_count"] longValue]];
+                                             user.photoLikeCount =
+                                             [NSNumber numberWithLong:[[dictionary objectForKey:@"photo_like_count"] longValue]];
+                                             
+                                             for (int i=0; i<watchList.count; i++)
+                                             {
+                                                 NSString *symbol = [watchList objectAtIndex:i];
+                                                 Stock *stock = [Stock stockWithName:symbol];
+                                                 [user addWatchObject:stock];
+                                             }
+                                             [appdelegate saveContext];
+                                             
+                                             if (block) {
+                                                 block(YES, user);
+                                             }
+                                             
+                                         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+                                         {
+                                             if (block) {
+                                                 block(NO, nil);
+                                             }
+                                         }];
+    [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
+    [operation start];
+
 }
 
 @end

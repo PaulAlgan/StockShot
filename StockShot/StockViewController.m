@@ -104,7 +104,7 @@
                                                     [Utility alertWithMessage:@"Remove from Watch List Fail."];
                                                 }
                                             }
-
+                                            [Datahandler requestUserInfo:me.facebookID OnComplete:^(BOOL success, User *user) { }];
                                         }];
 
         }
@@ -124,6 +124,7 @@
                                                  [Utility alertWithMessage:@"Add to Watch List Fail."];
                                              }
                                          }
+                                         [Datahandler requestUserInfo:me.facebookID OnComplete:^(BOOL success, User *user) { }];
                                      }];
 
         }
