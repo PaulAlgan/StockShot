@@ -128,7 +128,10 @@
                                                  [Utility alertWithMessage:@"Add to Watch List Fail."];
                                              }
                                          }
-                                         [Datahandler requestUserInfo:me.facebookID OnComplete:^(BOOL success, User *user) { }];
+                                         [Datahandler requestUserInfo:me.facebookID OnComplete:^(BOOL success, User *user)
+                                         {
+
+                                         }];
                                      }];
 
         }

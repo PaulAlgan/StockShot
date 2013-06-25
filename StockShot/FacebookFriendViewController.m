@@ -98,7 +98,6 @@
                 [followBt setTitle:@"Follow" forState:UIControlStateNormal];
             }
             cell.imageView.image = nil;
-//            NSLog(@"USER: %@",user);
         }
         else
         {
