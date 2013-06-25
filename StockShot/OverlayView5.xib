@@ -497,6 +497,22 @@
 					</object>
 					<int key="connectionID">120</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">symbolLabel</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="139051357"/>
+					</object>
+					<int key="connectionID">121</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">lastLabel</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="877598690"/>
+					</object>
+					<int key="connectionID">122</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -644,7 +660,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">120</int>
+			<int key="maxID">122</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -661,6 +677,7 @@
 						<string key="openLabel">UILabel</string>
 						<string key="pChangeLabel">UILabel</string>
 						<string key="pbRatioLabel">UILabel</string>
+						<string key="peRatioLabel">UILabel</string>
 						<string key="symbolLabel">UILabel</string>
 						<string key="timeLable">UILabel</string>
 						<string key="volumeLabel">UILabel</string>
@@ -700,6 +717,10 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="pbRatioLabel">
 							<string key="name">pbRatioLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="peRatioLabel">
+							<string key="name">peRatioLabel</string>
 							<string key="candidateClassName">UILabel</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="symbolLabel">
