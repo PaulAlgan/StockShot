@@ -29,20 +29,23 @@
                                          {
                                              NSMutableArray *allStock = [[NSMutableArray alloc] init];
                                              NSArray *stocks = [JSON objectForKey:@"stock"];
+                                             NSLog(@"All Stock N: %d",stocks.count);
+
                                              if (stocks.count>0)
                                              {
                                                  NSArray *oldStocks = [Stock getAllStock];
-                                                 if (oldStocks.count == 0)
+                                                 if (oldStocks.count > 2900)
                                                  {
+                                                    allStock = [NSMutableArray arrayWithArray:oldStocks];
+                                                 }
+                                                 else
+                                                 {
+                                                     NSLog(@"OLD.count: %d",oldStocks.count);
                                                      for (int i=0; i<stocks.count; i++){
                                                          Stock *stock = [Stock stockWithName:[stocks objectAtIndex:i]];
                                                          [allStock addObject:stock];
                                                      }
                                                      [appdelegate saveContext];
-                                                 }
-                                                 else
-                                                 {
-                                                     allStock = [NSMutableArray arrayWithArray:oldStocks];
                                                  }
                                              }
                                              if (block) {

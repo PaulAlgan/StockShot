@@ -385,6 +385,7 @@ static NSString *CellClassName = @"ImageViewCell";
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
 //    NSLog(@"Begin Edit");
+    [self updateHotSearch];
     [self getHotSerach];
 }
 
@@ -399,6 +400,14 @@ static NSString *CellClassName = @"ImageViewCell";
     if (stock) {
         StockViewController *stockVC = [[StockViewController alloc] initWithStock:stock];
         [self.navigationController  pushViewController:stockVC animated:YES];
+    }
+    else
+    {
+        if (hashTagTypeButton.selected) {
+            ImageGridViewController *imageGridView = [[ImageGridViewController alloc]
+                                                      initWithHashTagName:searchTextField.text];
+            [self.navigationController pushViewController:imageGridView animated:YES];
+        }
     }
    
     [searchTextField resignFirstResponder];
@@ -440,6 +449,8 @@ static NSString *CellClassName = @"ImageViewCell";
     {
         hotSearchFilter = hotSearch;
     }
+    
+    hotSearchFilter = [hotSearchFilter sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     [resultTableView reloadData];
 }
 
@@ -453,9 +464,9 @@ static NSString *CellClassName = @"ImageViewCell";
     [request setTimeoutInterval:7];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
                                          {
-                                             NSLog(@"JSON: %@",JSON);
+//                                             NSLog(@"JSON: %@",JSON);
                                              hotSearch = [JSON objectForKey:@"keyword"];
-                                             hotSearchFilter = hotSearch;
+                                             hotSearchFilter = [hotSearch sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
                                              [resultTableView reloadData];
                                          } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
                                          {
