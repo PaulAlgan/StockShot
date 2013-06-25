@@ -106,7 +106,6 @@
 
 - (void)reloadUserData
 {
-//    NSLog(@"User: %@",[self.user debugDescription]);
     [profileImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture",self.user.facebookID]]
                      placeholderImage:[UIImage imageNamed:@"profileImage.png"]];
     userNameLabel.text = self.user.name;

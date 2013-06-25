@@ -46,15 +46,26 @@ static NSString *CellClassName = @"WatchCell";
     self.navigationItem.leftBarButtonItem = [Utility menuBarButtonWithID:self];
     watchListTableView.separatorColor = [UIColor clearColor];
     watchListTableView.backgroundColor = [UIColor clearColor];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
     
+    [self updateWatchList];
+}
+
+- (void)updateWatchList
+{
     me = [User me];
     if (me.facebookID){
-       watchList = [me.watch allObjects];
+        watchList = [me.watch allObjects];
         for (Stock *stock in watchList)
         {
             NSLog(@"Watch: %@",[stock debugDescription]);
         }
     }
+
 }
 
 #pragma mark - Table view data source

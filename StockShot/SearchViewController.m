@@ -367,18 +367,26 @@ static NSString *CellClassName = @"ImageViewCell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (hashTagTypeButton.selected)
+    Stock *stock = [Stock getStockWithName:[hotSearchFilter objectAtIndex:indexPath.row]];
+    if (stock)
     {
-        ImageGridViewController *imageGridView = [[ImageGridViewController alloc]
-                                                  initWithHashTagName:[hotSearchFilter objectAtIndex:indexPath.row]];
-        [self.navigationController pushViewController:imageGridView animated:YES];
+        StockViewController *stockVC = [[StockViewController alloc] initWithStock:stock];
+        [self.navigationController  pushViewController:stockVC animated:YES];
     }
     else
     {
-        ProfileViewController *profileVC = [[ProfileViewController alloc] initWithUser:[resultUsers objectAtIndex:indexPath.row]];
-        [self.navigationController pushViewController:profileVC animated:YES];
+        if (hashTagTypeButton.selected)
+        {
+            ImageGridViewController *imageGridView = [[ImageGridViewController alloc]
+                                                      initWithHashTagName:[hotSearchFilter objectAtIndex:indexPath.row]];
+            [self.navigationController pushViewController:imageGridView animated:YES];
+        }
+        else
+        {
+            ProfileViewController *profileVC = [[ProfileViewController alloc] initWithUser:[resultUsers objectAtIndex:indexPath.row]];
+            [self.navigationController pushViewController:profileVC animated:YES];
+        }
     }
-    
 }
 
 #pragma mark UITextField Delegate Methods
@@ -529,7 +537,7 @@ static NSString *CellClassName = @"ImageViewCell";
                                                  }
                                              }
                                              resultUsers = [NSArray arrayWithArray:usersTemp];
-                                             NSLog(@"ResultUser: %@",resultUsers);
+//                                             NSLog(@"ResultUser: %@",resultUsers);
                                              [resultTableView reloadData];
                                          } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
                                          {
