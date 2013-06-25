@@ -7,10 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
 
 @interface Utility : NSObject
 +(BOOL)haveCheckingKey:(NSString*)key;
 +(void)createCheckingKey:(NSString*)key withValue:(id)value;
++(UIImagePickerControllerCameraFlashMode)currentFlashMode;
++(void)setCurrentFlashMode:(UIImagePickerControllerCameraFlashMode)mode;
+
 
 + (BOOL)isPad;
 + (BOOL)isPhone;
@@ -32,4 +36,5 @@
 + (UIImage*)scaleImage:(UIImage*)anImage withEditingInfo:(NSDictionary*)editInfo;
 + (UIImage*)imageByCropping:(UIImage *)imageToCrop toRect:(CGRect)rect;
 + (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
++ (NSString*)urlStringForPhotoKey:(NSString*)key;
 @end

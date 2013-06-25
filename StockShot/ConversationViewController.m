@@ -48,6 +48,7 @@ static NSString *CellClassName = @"MessageCell";
 {
     [super viewDidLoad];
     self.navigationItem.leftBarButtonItem = [Utility backButton:self];
+    
     cellLoader = [UINib nibWithNibName:CellClassName bundle:[NSBundle mainBundle]];
     appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     

@@ -50,8 +50,12 @@ static NSString *CellClassName = @"NewsCell";
     UIButton *refreshButton = [Utility refreshButton];
     [refreshButton addTarget:self action:@selector(reloadFeed) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:refreshButton];
-    
-    [self getNewsTimeline:me.facebookID];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    [self reloadFeed];
 }
 
 - (void)reloadFeed

@@ -18,6 +18,8 @@ static NSString *CellClassName = @"CommentCell";
     NSMutableArray *comments;
     BOOL keyboardShow;
     User *me;
+    UIButton *editButton;
+    UIButton *doneButton;
 }
 @end
 
@@ -51,6 +53,16 @@ static NSString *CellClassName = @"CommentCell";
     [super viewDidLoad];
     self.title = @"Comments";
     self.navigationItem.leftBarButtonItem = [Utility backButton:self];
+  
+    editButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+    [editButton setImage:[UIImage imageNamed:@"editComment_bt.png"] forState:UIControlStateNormal];
+    [editButton addTarget:self action:@selector(setEditTable) forControlEvents:UIControlEventTouchUpInside];
+    
+    doneButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+    [doneButton setImage:[UIImage imageNamed:@"editComment_bt.png"] forState:UIControlStateNormal];
+    [doneButton addTarget:self action:@selector(setDoneTable) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:editButton];
     
     cellLoader = [UINib nibWithNibName:CellClassName bundle:[NSBundle mainBundle]];
     
@@ -76,6 +88,21 @@ static NSString *CellClassName = @"CommentCell";
     [super viewWillAppear:YES];
     [self scrollToBottomAnimated:NO];
 }
+
+- (void)setEditTable
+{
+    [contentTableView setEditing:YES animated:YES];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:doneButton];
+    
+}
+
+- (void)setDoneTable
+{
+    [contentTableView setEditing:NO animated:YES];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:editButton];
+    
+}
+
 #pragma mark - IBAction
 - (IBAction)sendMessage:(id)sender
 {
@@ -132,6 +159,27 @@ static NSString *CellClassName = @"CommentCell";
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
     
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return YES if you want the specified item to be editable.
+    return YES;
+}
+
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+//        NSLog(@"CommentDel: %@",[comments objectAtIndex:indexPath.row]);
+        NSDictionary *dict = [[NSDictionary alloc] initWithDictionary:[comments objectAtIndex:indexPath.row]];
+        [Datahandler removeCommentWithKey:[dict objectForKey:@"key"] userID:me.facebookID
+                               OnComplete:^(BOOL success, NSString *result)
+        {
+            [comments removeObjectAtIndex:indexPath.row];
+            [contentTableView reloadData];
+        }];
+    }
 }
 
 #pragma mark - Table view delegate

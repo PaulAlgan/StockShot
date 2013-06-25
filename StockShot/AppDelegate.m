@@ -23,6 +23,7 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 @synthesize tabBarController;
+@synthesize currentSymbol;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -105,13 +106,62 @@
     [self.window makeKeyAndVisible];
     lastTabSelect = currentTabSelect = 0;
     
+    notificationLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 18, 18)];
+    notificationLabel.textAlignment = NSTextAlignmentCenter;
+    notificationLabel.backgroundColor = [UIColor colorWithRed:15.0/255.0 green:32.0/255.0 blue:40.0/255.0 alpha:1];
+    notificationLabel.textColor = [UIColor colorWithRed:253.0/255.0 green:253.0/255.0 blue:253.0/255.0 alpha:1];
+    notificationLabel.font = [UIFont boldSystemFontOfSize:14];
     
+    User *me = [User me];
+    if (me.facebookID)
+    {
+        [Datahandler getNewMessageWithuserID:me.facebookID
+                                  OnComplete:^(BOOL success, int newMsgCount)
+        {
+            if (success && (newMsgCount > 0)) {
+                [self showNotificationViewFor:4 value:[NSString stringWithFormat:@"%d",newMsgCount]];
+            }
+        }];
+    }
     
+//    notificationLabel.text = @"1";
     return YES;
 }
 
 
 #pragma mark - Method
+
+- (CGFloat) locationFor:(NSUInteger)tabIndex
+{
+    CGFloat tabItemWidth = self.tabBarController.tabBar.frame.size.width / self.tabBarController.tabBar.items.count;
+    CGFloat halfTabItemWidth = (tabItemWidth / 2.0) - (notificationLabel.frame.size.width / 2.0);
+    return (tabIndex * tabItemWidth) + halfTabItemWidth;
+}
+- (void)showNotificationViewFor:(NSUInteger)tabIndex value:(NSString*)value
+{
+    CGFloat tabItemWidth = self.tabBarController.tabBar.frame.size.width / self.tabBarController.tabBar.items.count;
+    int notiX = (tabIndex * tabItemWidth) + (tabItemWidth - notificationLabel.frame.size.width - 5);
+    
+    notificationLabel.text = value;
+    notificationLabel.frame = CGRectMake(notiX, 2,
+                                        notificationLabel.frame.size.width, notificationLabel.frame.size.height);
+    
+    if (!notificationLabel.superview) [self.tabBarController.tabBar addSubview:notificationLabel];
+    
+    notificationLabel.alpha = 0.0;
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.5];
+    notificationLabel.alpha = 1.0;
+    [UIView commitAnimations];
+}
+
+- (void)hideNotificationView
+{
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.2];
+    notificationLabel.alpha = 0.0;
+    [UIView commitAnimations];
+}
 
 - (void)selectProfilePageWithUser:(User*)user
 {
@@ -141,7 +191,10 @@
 - (BOOL)tabBarController:(UITabBarController *)atabBarController shouldSelectViewController:(UIViewController *)viewController
 {
     NSLog(@"SELECT TABBAR");
-    [profileNavigation.view removeFromSuperview];
+    if (profileNavigation) {
+        [profileNavigation.view removeFromSuperview];
+    }
+    
     UITabBar *tabbar = [self.tabBarController tabBar];
     tabbar.selectionIndicatorImage = [UIImage imageNamed:@"tabbarBG_select.png"];
     
@@ -150,6 +203,10 @@
         if (viewController == [atabBarController.viewControllers objectAtIndex:i]) {
             lastTabSelect = currentTabSelect;
             currentTabSelect = i;
+            
+            if (i == 4) {
+                [self hideNotificationView];
+            }
         }
     }
     return YES;

@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GMGridView.h"
 
 @interface LikedViewController : UIViewController
-
+<GMGridViewActionDelegate,GMGridViewDataSource>
+{
+    IBOutlet UIView *photoGridView;
+}
 @end

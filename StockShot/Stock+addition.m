@@ -63,4 +63,17 @@
     return stock;
 }
 
++ (NSArray*)getAllStock
+{
+    AppDelegate *appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Stock"];
+    NSSortDescriptor *sortByName = [[NSSortDescriptor alloc] initWithKey:@"symbol" ascending:YES];
+    [request setSortDescriptors:@[sortByName]];
+    
+    NSError *error = nil;
+    NSArray *matches = [appdelegate.managedObjectContext executeFetchRequest:request error:&error];
+    return matches;
+}
+
 @end

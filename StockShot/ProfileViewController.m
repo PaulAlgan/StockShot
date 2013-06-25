@@ -57,14 +57,16 @@
         self.navigationItem.leftBarButtonItem = [Utility menuBarButtonWithID:self];
     }
 
-    self.title = @"Profile";
     
     if ([self.user.me boolValue]){
+        self.title = @"My Profile";
         chatButton.hidden = YES;
         editProfileButton.hidden = NO;
         followButton.hidden = YES;
     }
     else{
+        self.title = @"User Profile";
+
         chatButton.hidden = NO;
         editProfileButton.hidden = YES;
         followButton.hidden = NO;
@@ -95,8 +97,11 @@
 - (void)setUser:(User *)user
 {
     _user = user;
-    [userPhotos removeAllObjects];
-    [_gmGridView reloadData];
+    if (userPhotos.count > 0) {
+        [userPhotos removeAllObjects];
+        [_gmGridView reloadData];
+    }
+
 }
 
 - (void)reloadUserData
@@ -105,6 +110,7 @@
     [profileImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://graph.facebook.com/%@/picture",self.user.facebookID]]
                      placeholderImage:[UIImage imageNamed:@"profileImage.png"]];
     userNameLabel.text = self.user.name;
+    statusLabel.text = [NSString stringWithFormat:@"%@",self.user.status];
     [followerButton setTitle:[NSString stringWithFormat:@"%d",[self.user.followerCount intValue]]
                     forState:UIControlStateNormal];
     [followingButton setTitle:[NSString stringWithFormat:@"%d",[self.user.followingCount intValue]]
@@ -259,6 +265,11 @@
                                              self.user.deviceToken = [dictionary objectForKey:@"device_token"];
                                              self.user.locale = [dictionary objectForKey:@"locale"];
                                              
+                                             if([dictionary objectForKey:@"status"])
+                                             {
+                                                 self.user.status = [dictionary objectForKey:@"status"];
+                                             }
+                                             
                                              self.user.notiComment = [dictionary objectForKey:@"notification_comment"];
                                              self.user.notiContact = [dictionary objectForKey:@"notification_contact"];
                                              self.user.notiLike = [dictionary objectForKey:@"notification_like"];
@@ -273,12 +284,10 @@
                                              [NSNumber numberWithLong:[[dictionary objectForKey:@"photo_like_count"] longValue]];
                                              [appdelegate saveContext];
                                              NSArray *photos = [dictionary objectForKey:@"photo"];
-//                                             NSLog(@"photo: %@",photos);
                                              
                                              if (!userPhotos) userPhotos = [[NSMutableArray alloc] init];
-                                             else [userPhotos removeAllObjects];
 
-                                             userPhotos = [NSArray arrayWithArray:photos];
+                                             userPhotos = [NSMutableArray arrayWithArray:photos];
                                              [_gmGridView reloadData];
                                              [self reloadUserData];
                                              [self dismissViewControllerAnimated:YES completion:nil];

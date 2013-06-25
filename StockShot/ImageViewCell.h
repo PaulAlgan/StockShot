@@ -24,6 +24,7 @@
 @property (nonatomic, retain) NSString *urlStringImage;
 @property (nonatomic, strong) NSString *photoKey;
 @property (nonatomic, strong) NSString *message;
+@property (nonatomic, strong) NSArray *likeList;
 @property (nonatomic, strong) NSString *key;
 
 - (IBAction)like:(id)sender;

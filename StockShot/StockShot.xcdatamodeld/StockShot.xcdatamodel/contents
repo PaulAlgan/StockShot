@@ -53,6 +53,7 @@
         <attribute name="notiLike" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="photoCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="photoLikeCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="have" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Photo" inverseName="belongto" inverseEntity="Photo" syncable="YES"/>
         <relationship name="watch" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Stock" inverseName="watchBy" inverseEntity="Stock" syncable="YES"/>
@@ -62,6 +63,6 @@
         <element name="Conversation" positionX="295" positionY="27" width="128" height="105"/>
         <element name="Photo" positionX="-9" positionY="324" width="128" height="120"/>
         <element name="Stock" positionX="160" positionY="192" width="128" height="240"/>
-        <element name="User" positionX="-263" positionY="99" width="128" height="315"/>
+        <element name="User" positionX="-263" positionY="99" width="128" height="330"/>
     </elements>
 </model>

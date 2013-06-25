@@ -9,9 +9,11 @@
 #import "StockViewController.h"
 #import "Stock+addition.h"
 #import "User+addition.h"
+#import "AppDelegate.h"
 @interface StockViewController ()
 {
     User *me;
+    AppDelegate *appdelegate;
 }
 @end
 
@@ -41,6 +43,8 @@
     [super viewDidLoad];
     self.navigationItem.leftBarButtonItem = [Utility backButton:self];
     symbolLabel.text = self.stock.symbol;
+    
+    appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     me = [User me];
     
     [Datahandler getStockDetail:[self.stock.symbol uppercaseString] OnComplete:^(BOOL success, Stock *stockMatch) {
@@ -137,6 +141,11 @@
 
 }
 
+- (IBAction)touchCamera:(id)sender
+{
+    [appdelegate setCurrentSymbol:self.stock.symbol];
+    [appdelegate.tabBarController setSelectedIndex:2];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

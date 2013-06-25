@@ -32,6 +32,23 @@
     messageLabel.text = message;
 }
 
+- (void)setLikeList:(NSArray *)likeList
+{
+    _likeList = likeList;
+    
+    if (_likeList.count >0)
+    {
+        NSDictionary *userDict = [_likeList objectAtIndex:0];
+        NSString *likeString = [NSString stringWithFormat:@"%@",[userDict objectForKey:@"username"]];
+        for (int i=1; i<_likeList.count; i++) {
+            userDict = [_likeList objectAtIndex:i];
+            likeString = [likeString stringByAppendingFormat:@", %@",[userDict objectForKey:@"username"]];
+        }
+        likeListsLabel.text = likeString;
+    }
+    
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];

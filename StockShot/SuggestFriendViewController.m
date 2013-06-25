@@ -8,8 +8,11 @@
 
 #import "SuggestFriendViewController.h"
 #import "AFJSONRequestOperation.h"
-
+#import "SuggestUserCell.h"
 #import "AppDelegate.h"
+
+static NSString *CellClassName = @"SuggestUserCell";
+
 @interface SuggestFriendViewController ()
 {
     UIActivityIndicatorView *loadingIndecator;
@@ -17,7 +20,7 @@
     UIBarButtonItem *reloadButton;
     
     AppDelegate *appdelegate;
-    NSMutableArray *suggestPlayers;
+    NSArray *suggestPlayers;
 }
 @end
 
@@ -37,19 +40,17 @@
     [super viewDidLoad];
     self.title = @"Suggested";
     appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    cellLoader = [UINib nibWithNibName:CellClassName bundle:[NSBundle mainBundle]];
     
     loadingIndecator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     loadingIndecator.hidesWhenStopped = YES;
     [loadingIndecator startAnimating];
     loadingIndecator.frame = CGRectMake(0, 0, 30, 40);
     loadingIndecatorButton = [[UIBarButtonItem alloc] initWithCustomView:loadingIndecator];
-    
+
     reloadButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh
                                                                  target:self
                                                                  action:@selector(getSuggestedPlayer)];
-    
-    
-//    self.navigationItem.rightBarButtonItem = loadingIndecatorButton;
     self.navigationItem.leftBarButtonItem = [Utility backButton:self];
 }
 
@@ -61,6 +62,17 @@
 
 #pragma mark - Table view data source
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([[[suggestPlayers objectAtIndex:indexPath.row] objectForKey:@"photo"] count] > 0) {
+        return 128;
+    }
+    else
+    {
+        return 46;
+    }
+    
+}
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
@@ -73,15 +85,18 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    SuggestUserCell *cell = (SuggestUserCell *)[tableView dequeueReusableCellWithIdentifier:CellClassName];
+    if (!cell)
+    {
+        NSArray *topLevelItems = [cellLoader instantiateWithOwner:self options:nil];
+        cell = [topLevelItems objectAtIndex:0];
     }
     
-    if (suggestPlayers.count > 0) {
-//        Player *player = [suggestPlayers objectAtIndex:indexPath.row];
-//        cell.textLabel.text = player.name;
+    if (suggestPlayers.count > 0)
+    {
+        NSDictionary *dict = [suggestPlayers objectAtIndex:indexPath.row];
+//        cell.playerDict = dict;
+        [cell setPlayerDict:dict];
     }
     return cell;
 }
@@ -103,57 +118,21 @@
 #pragma mark - Data
 - (void)getSuggestedPlayer
 {
-//    self.navigationItem.rightBarButtonItem = loadingIndecatorButton;
-
     NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/suggested_player"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"GET"];
     [request setTimeoutInterval:7];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
-                                         {;
+                                         {
                                              NSArray *players = [JSON objectForKey:@"player"];
-//                                             NSLog(@"PlayerN: %d",players.count);
                                              if (!suggestPlayers) {
-                                                 suggestPlayers = [[NSMutableArray alloc] init];
+                                                 suggestPlayers = [[NSArray alloc] init];
                                              }
-                                             else{
-                                                 [suggestPlayers removeAllObjects];
-                                             }
-                                             
-                                             for (int i=0; i<players.count; i++) {
-//                                                 NSDictionary *dict = [players objectAtIndex:i];
-//                                                 Player *player = [Player createPlayerWithFacebookID:[dict objectForKey:@"facebook_id"]
-//                                                                                                 InManagedObjectContext:appdelegate.managedObjectContext];
-//                                                 
-//                                                 player.username = [dict objectForKey:@"username"];
-//                                                 player.name = [dict objectForKey:@"name"];
-//                                                 player.firstName = [dict objectForKey:@"first_name"];
-//                                                 player.lastName = [dict objectForKey:@"last_name"];
-//                                                 player.facebookID = [dict objectForKey:@"facebook_id"];
-//                                                 player.email = [dict objectForKey:@"email"];
-//                                                 player.deviceToken = [dict objectForKey:@"device_token"];
-//                                                 player.locale = [dict objectForKey:@"locale"];
-//                                                 
-//                                                 player.notiComment = [dict objectForKey:@"notification_comment"];
-//                                                 player.notiContact = [dict objectForKey:@"notification_contact"];
-//                                                 player.notiLike = [dict objectForKey:@"notification_like"];
-//                                                 
-//                                                 player.followerCount =
-//                                                 [NSNumber numberWithLong:[[dict objectForKey:@"follower_count"] longValue]];
-//                                                 player.followingCount =
-//                                                 [NSNumber numberWithLong:[[dict objectForKey:@"following_count"] longValue]];
-//                                                 player.photoCount =
-//                                                 [NSNumber numberWithLong:[[dict objectForKey:@"photo_count"] longValue]];
-//                                                 player.photoLikeCount =
-//                                                 [NSNumber numberWithLong:[[dict objectForKey:@"photo_like_count"] longValue]];
-//                                                 
-//                                                 [suggestPlayers addObject:player];
-                                             }
-                                             [appdelegate saveContext];
+                                             suggestPlayers = players;
+                                            
+//                                             NSLog(@"suggestPlayers: %@",[suggestPlayers objectAtIndex:11]);
                                              [contentTableView reloadData];
-                                             
-//                                             self.navigationItem.rightBarButtonItem = reloadButton;
-                                             
+                                                                                          
                                              NSLog(@"PlayerN: %d",suggestPlayers.count);
                                          } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
                                          {

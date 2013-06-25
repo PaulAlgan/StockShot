@@ -16,4 +16,5 @@
 
 + (Stock*)stockWithName:(NSString*)name;
 + (Stock*)getStockWithName:(NSString*)name;
++ (NSArray*)getAllStock;
 @end

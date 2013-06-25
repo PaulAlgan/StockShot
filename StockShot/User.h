@@ -2,7 +2,7 @@
 //  User.h
 //  StockShot
 //
-//  Created by Phatthana Tongon on 6/19/56 BE.
+//  Created by Phatthana Tongon on 6/24/56 BE.
 //  Copyright (c) 2556 Phatthana Tongon. All rights reserved.
 //
 
@@ -29,6 +29,7 @@
 @property (nonatomic, retain) NSNumber * photoCount;
 @property (nonatomic, retain) NSNumber * photoLikeCount;
 @property (nonatomic, retain) NSString * username;
+@property (nonatomic, retain) NSString * status;
 @property (nonatomic, retain) NSSet *have;
 @property (nonatomic, retain) NSSet *watch;
 @end

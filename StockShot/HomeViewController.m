@@ -25,6 +25,7 @@ static NSString *CellClassName = @"ImageViewCell";
     AppDelegate *appdelegate;
     NSMutableArray *resultImages;
     User *me;
+    LoginViewController *loginView;
 }
 @end
 
@@ -53,29 +54,50 @@ static NSString *CellClassName = @"ImageViewCell";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:refreshButton];
     
     me = [User me];
-    LoginViewController *loginView = [[LoginViewController alloc] init];
+    loginView = [[LoginViewController alloc] init];
     if (!me)
     {
         loginView.haveUser = NO;
-        [self presentViewController:loginView animated:YES completion:nil];
+//        [self presentViewController:loginView animated:YES completion:nil];
     }
     else
     {
         loginView.haveUser = YES;
-        [self presentViewController:loginView animated:NO completion:nil];
+//        [self presentViewController:loginView animated:NO completion:nil];
     }
     
-    [self getAllStock];
+    
+    contentTableView.backgroundColor = [UIColor clearColor];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+    
+    
+    
+    if (loginView) {
+        NSLog(@"PRESENT");
+        [self presentViewController:loginView animated:NO completion:nil];
+    }
+    else
+    {
+        [self getAllStock];
+    }
+    loginView = nil;
+    
     me = [User me];
-    if (me.username) {
+    if (me.facebookID) {
+        NSLog(@"GETtimeline");
         [self getTimeline:me.facebookID];
     }
+
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:YES];
 }
 
 - (void)reloadTimeline
@@ -233,6 +255,7 @@ static NSString *CellClassName = @"ImageViewCell";
         cell.urlStringImage = [NSString stringWithFormat:@"https://stockshot-kk.appspot.com/api/photo?photo_key=%@",[photo objectForKey:@"key"]];
         cell.message = [NSString stringWithFormat:@"%@ %@",
                         [player objectForKey:@"name"],[photo objectForKey:@"message"]];
+        cell.likeList = [photo objectForKey:@"player_like"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.photoKey = [photo objectForKey:@"key"];
 //        cell.key  = [[resultImages objectAtIndex:indexPath.row] objectForKey:@"key"];
@@ -250,9 +273,10 @@ static NSString *CellClassName = @"ImageViewCell";
 #pragma mark - Data
 - (void)getAllStock
 {
+    NSLog(@"getAllStock");
     [Datahandler getAllStockOnComplete:^(bool success, NSArray *allstock) {
         if (success) {
-//            NSLog(@"AllStock: %@",allstock);
+            NSLog(@"GET STOCK DONE");
         }
     }];
 
@@ -281,6 +305,7 @@ static NSString *CellClassName = @"ImageViewCell";
                                                  [resultImages insertObject:[photos objectAtIndex:i] atIndex:0];
                                              }
 //                                             if (resultImages.count > 0) NSLog(@"PHOTO: %@",[resultImages objectAtIndex:0]);
+                                             
                                              for (int i=0; i<[resultImages count]; i++)
                                              {
                                                  NSDictionary *player = [[resultImages objectAtIndex:i] objectForKey:@"action_player"];
@@ -291,7 +316,6 @@ static NSString *CellClassName = @"ImageViewCell";
                                                  newUser.name = [player objectForKey:@"name"];
                                                  newUser.username = [player objectForKey:@"username"];                                                 
                                              }
-//                                             NSLog(@"ResultImage[0]: %@",[resultImages objectAtIndex:0]);
                                              [contentTableView reloadData];
                                              [appdelegate saveContext];
                                              

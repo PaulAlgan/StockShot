@@ -27,18 +27,24 @@
                                          JSONRequestOperationWithRequest:request
                                          success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
                                          {
-//                                             NSLog(@"JSON: %@",JSON);
                                              NSMutableArray *allStock = [[NSMutableArray alloc] init];
                                              NSArray *stocks = [JSON objectForKey:@"stock"];
-                                             if (stocks.count>0) {
-                                                 for (int i=0; i<stocks.count; i++){
-//                                                     NSString *stockName = [stocks objectAtIndex:i];
-                                                     Stock *stock = [Stock stockWithName:[stocks objectAtIndex:i]];
-                                                     [allStock addObject:stock];
+                                             if (stocks.count>0)
+                                             {
+                                                 NSArray *oldStocks = [Stock getAllStock];
+                                                 if (oldStocks.count == 0)
+                                                 {
+                                                     for (int i=0; i<stocks.count; i++){
+                                                         Stock *stock = [Stock stockWithName:[stocks objectAtIndex:i]];
+                                                         [allStock addObject:stock];
+                                                     }
+                                                     [appdelegate saveContext];
                                                  }
-                                                 [appdelegate saveContext];
+                                                 else
+                                                 {
+                                                     allStock = [NSMutableArray arrayWithArray:oldStocks];
+                                                 }
                                              }
-                                             
                                              if (block) {
                                                  block(YES,allStock);
                                              }
@@ -51,10 +57,9 @@
                                              [Utility alertWithMessage:[NSString stringWithFormat:@"ERROR: %@",url]];
                                          }];
     [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
-    
     [operation start];
-    
 }
+
 
 + (void)getStockDetail:(NSString*)stockName OnComplete:(void (^)(BOOL success, Stock *stock))block
 {
@@ -63,7 +68,7 @@
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://210.1.59.181/stockshot/GetDataStockByName.aspx?symbol=%@",stockName]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"GET"];
-    [request setTimeoutInterval:20];
+    [request setTimeoutInterval:7];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
                                          {
                                              NSDictionary *stockDetail = [NSDictionary dictionaryWithDictionary:JSON];
@@ -101,7 +106,7 @@
     NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/explore"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"GET"];
-    [request setTimeoutInterval:20];
+    [request setTimeoutInterval:7];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
                                          {
 //                                             NSLog(@"PhotoRandom: %@",[JSON objectForKey:@"photo_list"]);
@@ -118,6 +123,45 @@
                                              }
                                             if (block) {
                                                  block(YES, [NSArray arrayWithArray:photoArray]);
+                                             }
+                                         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+                                         {
+                                             if (block) {
+                                                 block(NO, nil);
+                                             }
+                                         }];
+    
+    [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
+    [operation start];
+    
+}
+
++ (void)getLikedPhotosFromUserID:(NSString*)userID OnComplete:(void (^)(BOOL success, NSArray *photos))block
+{
+    NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/get_like_photo"];
+    NSString *params = [NSString stringWithFormat:@"facebook_id=%@",userID];
+
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setTimeoutInterval:20];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
+                                         {
+                                             //                                             NSLog(@"PhotoRandom: %@",[JSON objectForKey:@"photo_list"]);
+                                             NSMutableArray *photoArray = [[NSMutableArray alloc] init];
+                                             NSArray *photos = [JSON objectForKey:@"photo"];
+//                                             for (int i=0; i<photos.count; i++)
+//                                             {
+//                                                 NSDictionary *photoDict = [photos objectAtIndex:i];
+//                                                 Photo *photo = [Photo photoWithKey:[photoDict objectForKey:@"key"]];
+//                                                 photo.createDate = [photoDict objectForKey:@"create_date"];
+//                                                 photo.likeCount = [[photoDict objectForKey:@"like_count"] stringValue];
+//                                                 photo.message = [photoDict objectForKey:@"message"];
+//                                                 [photoArray addObject:photo];
+//                                             }
+                                             
+                                             if (block) {
+                                                 block(YES, [NSArray arrayWithArray:photos]);
                                              }
                                          } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
                                          {
@@ -249,4 +293,84 @@
 
 }
 
++ (void)removeCommentWithKey:(NSString*)commentKey userID:(NSString*)userID OnComplete:(void (^)(BOOL success, NSString *result))block
+{
+    NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/remove_comment"];
+    NSString *params = [NSString stringWithFormat:@"facebook_id=%@&comment_key=%@",userID,commentKey];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setTimeoutInterval:20];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
+                                         {
+                                             NSString *result = [JSON objectForKey:@"result"];
+                                             if (block) {
+                                                 block(YES, result);
+                                             }
+                                         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+                                         {
+                                             if (block) {
+                                                 block(NO, nil);
+                                             }
+                                         }];
+    
+    [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
+    [operation start];
+}
+
++ (void)getNewMessageWithuserID:(NSString*)userID OnComplete:(void (^)(BOOL success, int newMsgCount))block
+{
+    NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/update_private_message"];
+    NSString *params = [NSString stringWithFormat:@"facebook_id=%@",userID];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setTimeoutInterval:20];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
+                                         {
+                                             NSArray *result = [JSON objectForKey:@"chat"];
+                                             NSLog(@"NEW MESSAGE: %d",result.count);
+                                             if (block) {
+                                                 block(YES, result.count);
+                                             }
+                                         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+                                         {
+                                             if (block) {
+                                                 block(NO, 0);
+                                             }
+                                         }];
+    
+    [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
+    [operation start];
+}
+
++ (void)followUserID:(NSString*)userID FromID:(NSString*)fromID OnComplete:(void (^)(BOOL success, NSString *result))block
+{
+        NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/follow"];
+        NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&target_id=%@",fromID,userID];
+        
+        NSLog(@"URL: %@",[url absoluteString]);
+        NSLog(@"params: %@",params);
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+        [request setHTTPMethod:@"POST"];
+        [request setHTTPBody:[params dataUsingEncoding:NSUTF8StringEncoding]];
+        [request setTimeoutInterval:20];
+        
+        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
+                                             {
+                                                 NSString *result = [JSON objectForKey:@"result"];
+                                                 if (block) {
+                                                     block(YES, result);
+                                                 }
+                                             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
+                                             {
+                                                 if (block) {
+                                                     block(NO, nil);
+                                                 }                                             }];
+        [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
+        
+        [operation start];
+    }
 @end

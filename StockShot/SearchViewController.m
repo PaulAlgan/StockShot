@@ -27,6 +27,7 @@ static NSString *CellClassName = @"ImageViewCell";
     NSMutableArray *resultImages;
     NSMutableArray *resultUsers;
     NSArray *hotSearch;
+    NSArray *hotSearchFilter;
     NSString *searchType;
     __gm_weak GMGridView *_gmGridView;
     User *me;
@@ -71,6 +72,15 @@ static NSString *CellClassName = @"ImageViewCell";
                                              selector:@selector(receiveTestNotification:)
                                                  name:@"TestNotification"
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateHotSearch)
+                                                 name:UITextFieldTextDidChangeNotification
+                                               object:searchTextField];
+
+    [searchTextField setLeftViewMode:UITextFieldViewModeAlways];
+    searchTextField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"searchIcon.png"]];
+    
     [self loadGridView];
 }
 
@@ -80,8 +90,11 @@ static NSString *CellClassName = @"ImageViewCell";
     [Datahandler getRandomPhotosOnComplete:^(BOOL success, NSArray *photos) {
         if (success) {
             NSLog(@"PhotosN %d",photos.count);
-            randomPhotos = photos;
-            [_gmGridView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+            if (randomPhotos!=photos) {
+                randomPhotos = photos;
+                [_gmGridView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+            }
+            
         }
     }];
 }
@@ -120,6 +133,7 @@ static NSString *CellClassName = @"ImageViewCell";
 #pragma mark - IBAction
 - (IBAction)touchCancel:(id)sender
 {
+    self.navigationItem.title = @"Explore";
     [searchTextField resignFirstResponder];
 //    photoGridView.hidden = NO;
     searchTextField.text = @"";
@@ -170,7 +184,7 @@ static NSString *CellClassName = @"ImageViewCell";
 
 - (void)keyboardWillShow:(NSNotification *)notification {
     keyboardShow = YES;
-//    photoGridView.hidden = YES;
+    self.navigationItem.title = @"Search";
     [self resizeViewWithOptions:[notification userInfo]];
 }
 
@@ -307,7 +321,7 @@ static NSString *CellClassName = @"ImageViewCell";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {    
     if (hashTagTypeButton.selected)
-        return hotSearch.count;
+        return hotSearchFilter.count;
     else
         return resultUsers.count;
 }
@@ -322,9 +336,9 @@ static NSString *CellClassName = @"ImageViewCell";
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
         
-        if (hotSearch.count)
+        if (hotSearchFilter.count)
         {
-            cell.textLabel.text = [hotSearch objectAtIndex:indexPath.row];
+            cell.textLabel.text = [hotSearchFilter objectAtIndex:indexPath.row];
         }
         return cell;
     }
@@ -356,7 +370,7 @@ static NSString *CellClassName = @"ImageViewCell";
     if (hashTagTypeButton.selected)
     {
         ImageGridViewController *imageGridView = [[ImageGridViewController alloc]
-                                                  initWithHashTagName:[hotSearch objectAtIndex:indexPath.row]];
+                                                  initWithHashTagName:[hotSearchFilter objectAtIndex:indexPath.row]];
         [self.navigationController pushViewController:imageGridView animated:YES];
     }
     else
@@ -370,7 +384,7 @@ static NSString *CellClassName = @"ImageViewCell";
 #pragma mark UITextField Delegate Methods
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    NSLog(@"Begin Edit");
+//    NSLog(@"Begin Edit");
     [self getHotSerach];
 }
 
@@ -400,6 +414,34 @@ static NSString *CellClassName = @"ImageViewCell";
     NSLog(@"End Edit");
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+//    [self updateHotSearch];
+    return YES;
+}
+
+
+- (void)updateHotSearch
+{
+    if (searchTextField.text.length >0)
+    {
+        NSMutableArray *tempArray = [[NSMutableArray alloc] init];
+        for (int i=0; i<hotSearch.count; i++)
+        {
+            NSString *string = [hotSearch objectAtIndex:i];
+            if ([string rangeOfString:searchTextField.text].location != NSNotFound)
+            {
+                [tempArray addObject:string];
+            }
+        }
+        hotSearchFilter = [NSArray arrayWithArray:tempArray];
+    }
+    else
+    {
+        hotSearchFilter = hotSearch;
+    }
+    [resultTableView reloadData];
+}
 
 #pragma mark - Data
 - (void)getHotSerach
@@ -413,6 +455,7 @@ static NSString *CellClassName = @"ImageViewCell";
                                          {
                                              NSLog(@"JSON: %@",JSON);
                                              hotSearch = [JSON objectForKey:@"keyword"];
+                                             hotSearchFilter = hotSearch;
                                              [resultTableView reloadData];
                                          } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
                                          {

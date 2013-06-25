@@ -8,6 +8,8 @@
 
 #import "ImageGridViewController.h"
 #import "AFJSONRequestOperation.h"
+#import "CommentViewController.h"
+#import "PhotoViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 @interface ImageGridViewController ()
@@ -42,6 +44,9 @@
 {
     [super viewDidLoad];
     [self loadGridView];
+    
+    self.navigationItem.leftBarButtonItem = [Utility backButton:self];
+    self.title = [NSString stringWithFormat:@"#%@",self.hashTag];
     NSLog(@"Hash: %@",self.hashTag);
     hashTagLabel.text = [NSString stringWithFormat:@"#%@",self.hashTag];
     [self getPhotoFromHashTag:self.hashTag];
@@ -87,6 +92,9 @@
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
 {
     NSLog(@"Did tap at index %d", position);
+    PhotoViewController *photoVC = [[PhotoViewController alloc] init];
+    photoVC.photo = [resultImages objectAtIndex:position];
+    [self.navigationController pushViewController:photoVC animated:YES];
 }
 
 - (void)GMGridViewDidTapOnEmptySpace:(GMGridView *)gridView
@@ -149,7 +157,7 @@
                                          {
 //                                             NSLog(@"JSON: %@",JSON);
                                              resultImages = [JSON objectForKey:@"photo"];
-                                             NSLog(@"Photo: %@",[resultImages objectAtIndex:0]);
+//                                             NSLog(@"Photo: %@",[resultImages objectAtIndex:0]);
                                              numberPhotosLabel.text = [NSString stringWithFormat:@"%d Photos",resultImages.count];
                                              [_gmGridView reloadData];
                                              

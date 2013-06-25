@@ -13,11 +13,14 @@
 {
     IBOutlet UIView *overlayView;
     IBOutlet UIImageView *imageView;
+    UIAlertView *uploadAlert;
     UIAlertView *loadAlert;
     IBOutlet UIView *filterView;
+    IBOutlet UIScrollView *overlayScrollView;
     
     // DEMO VIEW
     IBOutlet UIView *overlay1;
+    IBOutlet UILabel *symbolLabel1;
     IBOutlet UITextField *textField1;
     IBOutlet UILabel *pChangeLabel1;
     IBOutlet UILabel *dateLable1;
@@ -28,6 +31,7 @@
     IBOutlet UILabel *openLabel1;
     
     IBOutlet UIView *overlay2;
+    IBOutlet UILabel *symbolLabel2;
     IBOutlet UITextField *textField2;
     IBOutlet UILabel *pChangeLabel2;
     IBOutlet UILabel *dateLable2;
@@ -48,4 +52,5 @@
 - (IBAction)touchShare:(id)sender;
 - (IBAction)touchBack:(id)sender;
 - (IBAction)touchShareSocial:(id)sender;
+
 @end

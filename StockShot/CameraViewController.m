@@ -63,7 +63,7 @@
         imagePicker = [[UIImagePickerController alloc] init];
     }
     
-    imagePicker.view.frame = CGRectMake(7, 44, 306, 306);
+    imagePicker.view.frame = CGRectMake(5, 5, 310, 310);
 	imagePicker.delegate = self;
     
     if(![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
@@ -73,9 +73,16 @@
     }
     else{
         imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
+//        imagePicker.cameraFlashMode = [Utility currentFlashMode];
         imagePicker.showsCameraControls = NO;
         imagePicker.wantsFullScreenLayout = NO;
-        [self.view addSubview:imagePicker.view];
+        [cameraView addSubview:imagePicker.view];
+        
+        imagePicker.cameraFlashMode = [Utility currentFlashMode];
+        if (imagePicker.cameraFlashMode == UIImagePickerControllerCameraFlashModeAuto) NSLog(@"GET AUTO");
+        if (imagePicker.cameraFlashMode == UIImagePickerControllerCameraFlashModeOff) NSLog(@"GET OFF");
+        [self updateFlashButton];
     }
 	
 	// Hide the controls:
@@ -97,16 +104,62 @@
 - (IBAction)touchBack:(id)sender
 {
     NSLog(@"TouchBack");
-
-//    [appdelegate backToLastTabbar];
-//    [self.view setHidden:YES];
-//    [self.view removeFromSuperview];
-    
     [self dismissViewControllerAnimated:NO completion:^{
         [appdelegate backToLastTabbar];
     }];
     
 }
+
+- (IBAction)swapCamera:(id)sender
+{
+    if (cameraReady) {
+        if (imagePicker.cameraDevice == UIImagePickerControllerCameraDeviceFront){
+            imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
+        }
+        else{
+            imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceFront;
+        }
+        
+
+    }
+}
+
+- (void)updateFlashButton
+{
+    if (imagePicker.cameraFlashMode == UIImagePickerControllerCameraFlashModeOff){
+        NSLog(@"OFF");
+        [flashButton setImage:[UIImage imageNamed:@"flash_no.png"] forState:UIControlStateNormal];
+    }
+    else if (imagePicker.cameraFlashMode == UIImagePickerControllerCameraFlashModeOn){
+        NSLog(@"ON");
+        [flashButton setImage:[UIImage imageNamed:@"flash.png"] forState:UIControlStateNormal];
+    }
+    else{
+        NSLog(@"AUTO");
+        [flashButton setImage:[UIImage imageNamed:@"flash_a.png"] forState:UIControlStateNormal];
+    }
+
+}
+- (IBAction)changeFlashType:(id)sender
+{
+    
+    if (imagePicker.cameraFlashMode == UIImagePickerControllerCameraFlashModeOff)
+        imagePicker.cameraFlashMode = UIImagePickerControllerCameraFlashModeOn;
+    else if (imagePicker.cameraFlashMode == UIImagePickerControllerCameraFlashModeOn)
+        imagePicker.cameraFlashMode = UIImagePickerControllerCameraFlashModeAuto;
+    else if (imagePicker.cameraFlashMode == UIImagePickerControllerCameraFlashModeAuto)
+        imagePicker.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
+
+    [Utility setCurrentFlashMode:imagePicker.cameraFlashMode];
+    [self updateFlashButton];
+}
+
+- (IBAction)swapGridView:(id)sender
+{
+    gridView.hidden = !gridView.hidden;
+}
+
+
 - (IBAction)takeImage:(id)sender
 {
     if (cameraReady) {

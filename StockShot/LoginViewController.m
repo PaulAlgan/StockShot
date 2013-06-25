@@ -91,20 +91,36 @@
     {
         // if the session isn't open, we open it here, which may cause UX to log in the user
         NSLog(@"NOT OPEN");
-        [FBSession openActiveSessionWithReadPermissions:[Utility facebookPermission]
-                                           allowLoginUI:YES
-                                      completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-                                          if (!error) {
-                                              [self openSession];
-                                          } else {
-                                              [[[UIAlertView alloc] initWithTitle:@"Error"
-                                                                          message:error.localizedDescription
-                                                                         delegate:nil
-                                                                cancelButtonTitle:@"OK"
-                                                                otherButtonTitles:nil]
-                                               show];
-                                          }
-                                      }];
+
+        [FBSession openActiveSessionWithPermissions:[Utility facebookPermission]
+                                       allowLoginUI:YES
+                                  completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+                                      if (!error) {
+                                          [self openSession];
+                                      } else {
+                                          [[[UIAlertView alloc] initWithTitle:@"Error"
+                                                                      message:error.localizedDescription
+                                                                     delegate:nil
+                                                            cancelButtonTitle:@"OK"
+                                                            otherButtonTitles:nil]
+                                           show];
+                                      }
+
+                                  }];
+//        [FBSession openActiveSessionWithReadPermissions:[Utility facebookPermission]
+//                                           allowLoginUI:YES
+//                                      completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+//                                          if (!error) {
+//                                              [self openSession];
+//                                          } else {
+//                                              [[[UIAlertView alloc] initWithTitle:@"Error"
+//                                                                          message:error.localizedDescription
+//                                                                         delegate:nil
+//                                                                cancelButtonTitle:@"OK"
+//                                                                otherButtonTitles:nil]
+//                                               show];
+//                                          }
+//                                      }];
     }
 }
 
@@ -142,6 +158,7 @@
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
                                          {
                                              NSDictionary *dictionary = [NSDictionary dictionaryWithDictionary:JSON];
+                                             NSLog(@"User: %@",dictionary);
                                              NSArray *watchList = [dictionary objectForKey:@"wish_list"];
                                              [self dismissViewControllerAnimated:YES completion:nil];
                                              User *user = [User me];
@@ -154,6 +171,7 @@
                                              user.email = [dictionary objectForKey:@"email"];
                                              user.deviceToken = [dictionary objectForKey:@"device_token"];
                                              user.locale = [dictionary objectForKey:@"locale"];
+                                             user.status = [dictionary objectForKey:@"status"];
                                              
                                              user.notiComment = [dictionary objectForKey:@"notification_comment"];
                                              user.notiContact = [dictionary objectForKey:@"notification_contact"];

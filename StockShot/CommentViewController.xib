@@ -46,8 +46,6 @@
 								<int key="NSvFlags">268</int>
 								<string key="NSFrame">{{271, 4}, {45, 45}}</string>
 								<reference key="NSSuperview" ref="933415661"/>
-								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">1</int>
@@ -90,7 +88,6 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{5, 8}, {258, 34}}</string>
 								<reference key="NSSuperview" ref="933415661"/>
-								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="354685790"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<reference key="IBUIBackgroundColor" ref="550868259"/>
@@ -115,12 +112,11 @@
 						</array>
 						<string key="NSFrame">{{0, 408}, {320, 52}}</string>
 						<reference key="NSSuperview" ref="979632185"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="789180209"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
-							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC4xODgyMzUyOTQxIDAuMjQ3MDU4ODIzNSAwLjI3NDUwOTgwMzkAA</bytes>
+							<int key="NSColorSpace">2</int>
+							<bytes key="NSRGB">MC4yNDcwNTg4MjM1IDAuMzEzNzI1NDkwMiAwLjM0MTE3NjQ3MDYAA</bytes>
 						</object>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					</object>
@@ -129,7 +125,6 @@
 						<int key="NSvFlags">276</int>
 						<string key="NSFrame">{{5, 0}, {310, 408}}</string>
 						<reference key="NSSuperview" ref="979632185"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="933415661"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="436560616"/>
@@ -146,7 +141,6 @@
 				</array>
 				<string key="NSFrame">{{0, 20}, {320, 460}}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="644753300"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">1</int>
@@ -324,53 +318,7 @@
 			<nil key="sourceID"/>
 			<int key="maxID">33</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes">
-			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
-				<object class="IBPartialClassDescription">
-					<string key="className">CommentViewController</string>
-					<string key="superclassName">UIViewController</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">sendMessage:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">sendMessage:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">sendMessage:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
-					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="chatTextView">UITextView</string>
-						<string key="contentTableView">UITableView</string>
-						<string key="sendButton">UIButton</string>
-						<string key="textInputView">UIView</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="chatTextView">
-							<string key="name">chatTextView</string>
-							<string key="candidateClassName">UITextView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="contentTableView">
-							<string key="name">contentTableView</string>
-							<string key="candidateClassName">UITableView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="sendButton">
-							<string key="name">sendButton</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="textInputView">
-							<string key="name">textInputView</string>
-							<string key="candidateClassName">UIView</string>
-						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/CommentViewController.h</string>
-					</object>
-				</object>
-			</array>
-		</object>
+		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>

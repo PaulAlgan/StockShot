@@ -12,6 +12,8 @@
 #import "AFJSONRequestOperation.h"
 #import "AppDelegate.h"
 #import "Stock+addition.h"
+#import "OverLayView.h"
+#import <FacebookSDK/FacebookSDK.h>
 @interface OverlayViewController ()
 {
     User *me;
@@ -19,6 +21,8 @@
     UIImage *sourceImage;
     NSString *sourceMessage;
     Stock *stock;
+    UIImage *sharePhoto;
+    OverLayView *overlay;
 }
 @end
 
@@ -38,12 +42,6 @@
     if (self) {
         sourceImage = image;
         sourceMessage = message;
-        
-//        [self getStockDetail:@"kk"];
-        [Datahandler getStockDetail:@"kk" OnComplete:^(BOOL success, Stock *stockTemp)
-        {
-            stock = stockTemp;
-        }];
     }
     return self;
 }
@@ -53,16 +51,32 @@
     [super viewDidLoad];
     self.title = @"Share Photo";
     appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
-    loadAlert = [[UIAlertView alloc] initWithTitle:@"Stock Shot"
+    [self initOverlayButton];
+    
+    uploadAlert = [[UIAlertView alloc] initWithTitle:@"Stock Shot"
                                            message:@"Uploading\n\n"
                                           delegate:nil
                                  cancelButtonTitle:nil
                                  otherButtonTitles:nil, nil];
+     loadAlert = [[UIAlertView alloc] initWithTitle:@"Stock Shot"
+                                            message:@"Loading\n\n"
+                                           delegate:nil
+                                  cancelButtonTitle:nil
+                                  otherButtonTitles:nil, nil];
+    
     UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     activityView.frame = CGRectMake(139.0f-20.0f, 75.0f, 40, 40);
-    [loadAlert addSubview:activityView];
+    [uploadAlert addSubview:activityView];
     [activityView startAnimating];
 
+    UIActivityIndicatorView *activityView2 = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    activityView2.frame = CGRectMake(139.0f-20.0f, 75.0f, 40, 40);
+    [loadAlert addSubview:activityView2];
+    [activityView2 startAnimating];
+    
+    
+    [loadAlert show];
+    [self getStockDetail];
     
     imageView.image = sourceImage;
     
@@ -79,6 +93,75 @@
         [button setBackgroundImage:buttonBG forState:UIControlStateNormal];
     }
 }
+
+- (void)initOverlayButton
+{
+    UIImage *buttonBG = [Utility imageWithImage:sourceImage scaledToSize:CGSizeMake(100, 100)];
+    
+
+    for (int i=0; i<10; i++)
+    {
+        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake((55)*i + 5*i, 0, 55, 55)];
+        button.tag = 200+i;
+        button.tintColor = [UIColor whiteColor];
+        button.titleLabel.font = [UIFont boldSystemFontOfSize:15];
+        button.titleLabel.shadowColor = [UIColor lightGrayColor];
+        button.titleLabel.shadowOffset = CGSizeMake(1, 1);
+        [button setTitle:[NSString stringWithFormat:@"%d",i+1] forState:UIControlStateNormal];
+        [button setBackgroundImage:buttonBG forState:UIControlStateNormal];
+        [button addTarget:self
+                   action:@selector(touchOverlay:)
+         forControlEvents:UIControlEventTouchUpInside];
+        [overlayScrollView addSubview:button];
+    }
+    overlayScrollView.contentSize = CGSizeMake((60*10)-5, 55);
+}
+
+- (void)getStockDetail
+{
+    NSString *stockSymbol = nil;
+    NSArray *messageArray = [sourceMessage componentsSeparatedByString:@"#"];
+    if (messageArray.count > 1) {
+        NSLog(@"Message: %@",messageArray);
+        NSLog(@"Message[0]: %@",[messageArray objectAtIndex:1]);
+        NSArray *hashTagArray = [[messageArray objectAtIndex:1] componentsSeparatedByString:@" "];
+        if (hashTagArray.count > 0) {
+            NSLog(@"HashTag[0]: %@",[hashTagArray objectAtIndex:0]);
+            stockSymbol = [hashTagArray objectAtIndex:0];
+        }
+    }
+    
+    if (stockSymbol) {
+        [Datahandler getStockDetail:[stockSymbol uppercaseString] OnComplete:^(BOOL success, Stock *stockTemp)
+         {
+             if (success) {
+                 stock = stockTemp;
+                 NSLog(@"Stock: %@",[stock debugDescription]);
+
+                 [loadAlert dismissWithClickedButtonIndex:0 animated:YES];
+             }
+             else
+             {
+                 [Datahandler getStockDetail:@"KK" OnComplete:^(BOOL success, Stock *stockTemp)
+                  {
+                      stock = stockTemp;
+                      [loadAlert dismissWithClickedButtonIndex:0 animated:YES];
+                  }];
+             }
+             
+         }];
+    }
+    else{
+        [Datahandler getStockDetail:@"KK" OnComplete:^(BOOL success, Stock *stockTemp)
+         {
+             stock = stockTemp;
+//             NSLog(@"Stock: %@",[stock debugDescription]);
+             [loadAlert dismissWithClickedButtonIndex:0 animated:YES];
+         }];
+        
+    }
+}
+
 - (IBAction)touchOverlay:(id)sender
 {
     UIButton *button = (UIButton*)sender;
@@ -88,39 +171,12 @@
         [view removeFromSuperview];
     }
     
-    NSDate *date = [NSDate date];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy MMM,dd"];
-    NSDateFormatter *timeFormatter = [[NSDateFormatter alloc] init];
-    [timeFormatter setDateFormat:@"HH:mm:ss"];
-
-    
-    if (tag == 0)
-    {
-        [overlayView addSubview:overlay1];
-        
-        if (stock) {
-            pChangeLabel1.text = [NSString stringWithFormat:@"%.2f%%",[stock.persentChange floatValue]];
-            lastLabel1.text = [NSString stringWithFormat:@"%.2f",[stock.last floatValue]];
-            openLabel1.text = [NSString stringWithFormat:@"%.2f",[stock.open floatValue]];
-            lowLabel1.text = [NSString stringWithFormat:@"%.2f",[stock.low floatValue]];
-            highLabel1.text = [NSString stringWithFormat:@"%.2f",[stock.high floatValue]];
-        }
-        dateLable1.text = [dateFormatter stringFromDate:date];
-        timeLable1.text = [timeFormatter stringFromDate:date];
-        
+    if (overlay) {
+        overlay = nil;
     }
-    else if (tag == 1)
-    {
-        [overlayView addSubview:overlay2];
-        
-        if (stock) {
-            pChangeLabel2.text = [NSString stringWithFormat:@"%.2f%%",[stock.persentChange floatValue]];
-            lastLabel2.text = [NSString stringWithFormat:@"%.2f",[stock.last floatValue]];
-        }
-        dateLable2.text = [dateFormatter stringFromDate:date];
-        timeLable2.text = [timeFormatter stringFromDate:date];
-    }  
+    overlay = [[OverLayView alloc] initWithOverlayNumber:tag+1 stock:stock datetime:[NSDate date]];
+    [overlayView addSubview:overlay.view];
+
 }
 - (IBAction)touchBack:(id)sender
 {
@@ -130,12 +186,18 @@
 - (IBAction)touchShare:(id)sender
 {
     UIImage *image = [self mergeView:[self imageWithView:imageView] withView:[self imageWithView:overlayView]];
+    sharePhoto = image;
     [self UploadPhoto:[Utility compressToFixSize:image] message:sourceMessage];
+    
+    if (facebookButton.selected) {
+        [self shareToFacebook];
+    }
 }
 
 - (IBAction)touchShareSocial:(id)sender
 {
-    
+    UIButton *button = (UIButton*)sender;
+    button.selected = !button.selected;
 }
 
 #pragma mark - UItextField Delegate
@@ -175,7 +237,7 @@
         
         NSString *imageDataString = [[imageData base64EncodingWithLineLength:0] stringByReplacingOccurrencesOfString:@"+" withString:@"%2B"];
         NSLog(@"ImageData[Length]: %d",[imageDataString length]);
-        [loadAlert show];
+        [uploadAlert show];
         NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/upload_photo"];
         NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&photo=%@&message=%@&geolocation=31.23,105.34"
                             ,me.facebookID,imageDataString,message];
@@ -185,7 +247,7 @@
         [request setTimeoutInterval:20];
         AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON)
                                              {
-                                                 [loadAlert dismissWithClickedButtonIndex:0 animated:YES];
+                                                 [uploadAlert dismissWithClickedButtonIndex:0 animated:YES];
                                                  if ([[JSON objectForKey:@"photo"] length] <= 0){
                                                      [Utility alertWithMessage:@"Upload fail."];
                                                  }
@@ -201,7 +263,7 @@
                                              } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON)
                                              {
                                                  //                                                 NSLog(@"ERROR CODE: %d",response.statusCode);
-                                                 [loadAlert dismissWithClickedButtonIndex:0 animated:YES];
+                                                 [uploadAlert dismissWithClickedButtonIndex:0 animated:YES];
                                                  [Utility alertWithMessage:[NSString stringWithFormat:@"Upload Photo Error: %d",response.statusCode]];
                                                  [self dismissViewControllerAnimated:YES completion:^{
                                                      [appdelegate backToLastTabbar];
@@ -212,6 +274,23 @@
         [operation start];
     }
     
+}
+
+- (void)shareToFacebook
+{
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                   sharePhoto, @"picture",
+                                   sourceMessage,@"name",
+                                   nil];
+    
+    FBRequest *uploadRequest = [FBRequest requestWithGraphPath:@"me/photos"
+                                                    parameters:params
+                                                    HTTPMethod:@"POST"];
+    [uploadRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error)
+    {
+        NSLog(@"Result: %@",result);
+    }];
 }
 
 

@@ -19,10 +19,11 @@
     int currentTabSelect;
     ProfileViewController *profileView;
     UINavigationController *profileNavigation;
-
+    UILabel* notificationLabel;
 }
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UITabBarController *tabBarController;
+@property (nonatomic, retain) NSString *currentSymbol;
 //@property (strong, nonatomic) UITabBar *tabbar;
 
 

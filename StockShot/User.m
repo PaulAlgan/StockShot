@@ -2,7 +2,7 @@
 //  User.m
 //  StockShot
 //
-//  Created by Phatthana Tongon on 6/19/56 BE.
+//  Created by Phatthana Tongon on 6/24/56 BE.
 //  Copyright (c) 2556 Phatthana Tongon. All rights reserved.
 //
 
@@ -29,6 +29,7 @@
 @dynamic photoCount;
 @dynamic photoLikeCount;
 @dynamic username;
+@dynamic status;
 @dynamic have;
 @dynamic watch;
 

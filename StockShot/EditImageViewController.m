@@ -53,7 +53,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"Filter";
+    self.navigationController.title = @"Filter";
     appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     if (_rawImage) {
         rawImageView.image = _rawImage;
@@ -81,6 +81,15 @@
                                              selector:@selector(receiveTestNotification:)
                                                  name:@"TestNotification"
                                                object:nil];
+    
+    
+    if (appdelegate.currentSymbol.length > 0)
+    {
+        captionTextField.text = [NSString stringWithFormat:@"#%@ ",appdelegate.currentSymbol];
+    }
+    else{
+        captionTextField.text = @"";
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated

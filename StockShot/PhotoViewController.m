@@ -64,12 +64,9 @@ static NSString *CellClassName = @"ImageViewCell";
 #pragma mark - ImageCell Delegate
 - (void)touchCommentInKey:(NSString *)key
 {
-    NSLog(@"KEY: %@",key);
-    
     CommentViewController *commentVC = [[CommentViewController alloc] initWithPhotoDict:self.photo];
     [self.navigationController pushViewController:commentVC animated:YES];
     [self setHidesBottomBarWhenPushed:NO];
-    
 }
 
 #define IMAGE_VIEW_TAG 101

@@ -41,6 +41,7 @@
 {
     [super viewDidLoad];
     appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
+    self.title = @"Edit Profile";
     self.navigationItem.leftBarButtonItem = [Utility backButton:self];
     UIButton *doneButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
     [doneButton setImage:[UIImage imageNamed:@"check_bt.png"] forState:UIControlStateNormal];
@@ -59,6 +60,12 @@
     userNameLabel.text = self.user.username;
     statusLabel.text = @"Status";
     emailLabel.text = self.user.email;
+    if (self.user.status.length > 0) {
+        statusLabel.text = self.user.status;
+    }
+    else{
+        statusLabel.text = @"status here";
+    }
         
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:)
                                                  name:UIKeyboardWillShowNotification object:nil];
@@ -119,16 +126,19 @@
 - (void)updatePlayer
 {
     NSURL *url = [NSURL URLWithString:@"https://stockshot-kk.appspot.com/api/player"];
-    NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&name=%@&username=%@&first_name=%@&last_name=%@&email=%@&locale=%@&device_token=%@&request_type=%@"
+    NSString *params = [[NSString alloc] initWithFormat:@"facebook_id=%@&name=%@&username=%@&first_name=%@&last_name=%@&status=%@&email=%@&locale=%@&device_token=%@&request_type=%@"
                         ,self.user.facebookID
                         ,nameLabel.text
                         ,userNameLabel.text
                         ,self.user.firstName
                         ,self.user.lastName
+                        ,statusLabel.text
                         ,emailLabel.text
                         ,self.user.locale
                         ,self.user.deviceToken,
                         @"register"];
+    
+    NSLog(@"param: %@",params);
     
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];

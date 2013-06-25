@@ -10,6 +10,8 @@
 
 @interface SuggestFriendViewController : UIViewController
 {
+    UINib *cellLoader;
+
     IBOutlet UITableView *contentTableView;
 }
 @end

@@ -40,6 +40,60 @@
     [defaults synchronize];
 }
 
+
++(UIImagePickerControllerCameraFlashMode)currentFlashMode
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if (![defaults objectForKey:@"FLASH"])
+    {
+        [Utility createCheckingKey:@"FLASH" withValue:@"OFF"];
+        [defaults synchronize];
+        NSString *mode = [defaults stringForKey:@"FLASH"];
+        NSLog(@"1st setting: FLASH MODE %@",mode);
+        return UIImagePickerControllerCameraFlashModeOff;
+    }
+    else
+    {
+        NSString *mode = [defaults stringForKey:@"FLASH"];
+        NSLog(@"setting: FLASH MODE %@",mode);
+        if ([mode isEqualToString:@"OFF"])
+            return UIImagePickerControllerCameraFlashModeOff;
+        else if ([mode isEqualToString:@"ON"])
+            return UIImagePickerControllerCameraFlashModeOn;
+        else  if ([mode isEqualToString:@"AUTO"])
+            return UIImagePickerControllerCameraFlashModeAuto;
+    }
+
+}
++(void)setCurrentFlashMode:(UIImagePickerControllerCameraFlashMode)mode
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    switch (mode) {
+        case UIImagePickerControllerCameraFlashModeOff:
+        {
+            [defaults setObject:@"OFF" forKey:@"FLASH"];
+            break;
+        }
+            
+        case UIImagePickerControllerCameraFlashModeOn:
+        {
+            [defaults setObject:@"ON" forKey:@"FLASH"];
+            break;
+        }
+            
+        case UIImagePickerControllerCameraFlashModeAuto:
+        {
+            [defaults setObject:@"AUTO" forKey:@"FLASH"];
+            break;
+        }
+        default:
+            break;
+    }
+    
+    [defaults synchronize];
+
+}
+
 + (BOOL)isPad
 {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
@@ -58,7 +112,9 @@
 + (NSArray*)facebookPermission
 {
     NSArray * params = [NSArray arrayWithObjects:
-                        @"user_checkins",@"friends_checkins",@"email",
+                        @"user_checkins",@"friends_checkins",@"email",@"user_location",
+                        @"offline_access",@"read_stream",@"user_photos",
+                        @"publish_stream",
                         nil];
     
     return params;
@@ -366,5 +422,12 @@
     UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return newImage;
+}
+
++ (NSString*)urlStringForPhotoKey:(NSString*)key
+{
+    NSString *urlString;
+    urlString = [NSString stringWithFormat:@"https://stockshot-kk.appspot.com/api/photo?photo_key=%@",key];    
+    return urlString;
 }
 @end

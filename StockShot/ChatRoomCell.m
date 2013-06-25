@@ -79,11 +79,20 @@
     }
     else
     {
-        timeAgo = [breakdownInfo second];
-        if (timeAgo>1)
-            unit = @"secs";
-        else
+        timeAgo = (int)[breakdownInfo second];
+        if (timeAgo>61)
+        {
+            timeAgo = 1;
             unit = @"sec";
+        }
+        else if (timeAgo>1)
+        {
+            unit = @"secs";
+        }
+        else
+        {
+            unit = @"sec";
+        }
     }
 
     timeLabel.text = [NSString stringWithFormat:@"%d %@ ago",timeAgo,unit];

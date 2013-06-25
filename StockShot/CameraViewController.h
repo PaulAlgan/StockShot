@@ -13,9 +13,16 @@
     IBOutlet UIButton *shutterButton;
     IBOutlet UIButton *libratyButton;
     IBOutlet UIButton *backButton;
+
+    IBOutlet UIView *cameraView;
+    IBOutlet UIView *gridView;
+    IBOutlet UIButton *flashButton;
 }
 - (IBAction)touchBack:(id)sender;
 - (IBAction)takeImage:(id)sender;
 - (IBAction)chooseFromLibrary:(id)sender;
 
+- (IBAction)swapCamera:(id)sender;
+- (IBAction)changeFlashType:(id)sender;
+- (IBAction)swapGridView:(id)sender;
 @end

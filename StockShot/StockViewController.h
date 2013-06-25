@@ -31,6 +31,7 @@
 }
 - (id)initWithStock:(Stock*)stockTemp;
 - (IBAction)touchAddWatchList:(id)sender;
+- (IBAction)touchCamera:(id)sender;
 
 @property (nonatomic,retain) Stock *stock;
 @end

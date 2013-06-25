@@ -12,8 +12,15 @@
 #import "ShareSettingViewController.h"
 #import "NotificationSettingViewController.h"
 
-@interface SettingViewController ()
+#import "User+addition.h"
+#import "AppDelegate.h"
+#import "LoginViewController.h"
 
+@interface SettingViewController ()
+{
+    User *me;
+    AppDelegate *appdelegate;
+}
 @end
 
 @implementation SettingViewController
@@ -40,6 +47,8 @@
 {
     [super viewDidLoad];
     self.navigationItem.leftBarButtonItem = [Utility menuBarButtonWithID:self];
+    
+    appdelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 }
 
 - (void)didReceiveMemoryWarning
@@ -48,7 +57,17 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)btLogOutAction:(id)sender {
+- (IBAction)btLogOutAction:(id)sender
+{
+    me = [User me];
+    me.me = [NSNumber numberWithBool:NO];
+    [appdelegate saveContext];
+    
+    [self.viewDeckController setCenterController:appdelegate.tabBarController];
+    LoginViewController *loginView = [[LoginViewController alloc] init];
+    loginView.haveUser = NO;
+    [appdelegate.tabBarController presentViewController:loginView animated:NO completion:^{ }];
+
 }
 
 - (IBAction)btShareSettingAction:(id)sender {

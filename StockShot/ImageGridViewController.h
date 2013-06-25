@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "GMGridView.h"
-
 @interface ImageGridViewController : UIViewController
 <GMGridViewActionDelegate,GMGridViewDataSource>
 {
